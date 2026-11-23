@@ -21,6 +21,8 @@ Every card renders at **30 fps** and **4K**: the pages are laid out at 1080×192
 
 For 16:9 pages, prefix the command with `VW=1920 VH=1080` so the browser viewport matches.
 
+Set `DPR=1` to render at 1080×1920 / 1920×1080 instead of 4K, and `FFMPEG=<path>` if ffmpeg is not on the `PATH`. The 9:16 tile card and bar charts keep all text in the top 75% of the frame and at least 120 px from the right edge, clear of the Shorts/Reels buttons.
+
 ## Rendering a card
 
 ```

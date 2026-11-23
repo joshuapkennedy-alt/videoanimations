@@ -5,13 +5,14 @@ stage.style.width = SW + 'px'; stage.style.height = SH + 'px';
 const fmt = n => Math.round(n).toLocaleString('en-GB');
 
 // ---- header ----
-const ty = WIDE ? 80 : 250;
-fadeIn(text(SW / 2, ty, SW - 80, eyebrow, Object.assign({}, T.eyebrow, { font: `600 ${WIDE ? 26 : 30}px Inter`, letterSpacing: '7px' })), 0.15);
-fadeIn(text(SW / 2, ty + (WIDE ? 48 : 56), SW - 80, title, Object.assign({}, T.title, { font: `700 ${WIDE ? 96 : 110}px PF` })), 0.3);
-fadeIn(text(SW / 2, ty + (WIDE ? 168 : 196), SW - 80, unit, Object.assign({}, T.sub, { font: `400 ${WIDE ? 32 : 36}px Inter` })), 0.45);
+const ty = WIDE ? 80 : 150;
+const CX = WIDE ? SW / 2 : 510;   // 9:16: centre of the x 60-960 safe column (120 px clear on the right, text in the top 75%)
+fadeIn(text(CX, ty, SW - 80, eyebrow, Object.assign({}, T.eyebrow, { font: `600 ${WIDE ? 26 : 30}px Inter`, letterSpacing: '7px' })), 0.15);
+fadeIn(text(CX, ty + (WIDE ? 48 : 56), SW - 80, title, Object.assign({}, T.title, { font: `700 ${WIDE ? 96 : 110}px PF` })), 0.3);
+fadeIn(text(CX, ty + (WIDE ? 168 : 196), SW - 80, unit, Object.assign({}, T.sub, { font: `400 ${WIDE ? 32 : 36}px Inter` })), 0.45);
 
 // ---- plot geometry ----
-const P = WIDE ? { x0: 460, x1: 1460, y0: 360, y1: 900 } : { x0: 150, x1: 990, y0: 620, y1: 1430 };
+const P = WIDE ? { x0: 460, x1: 1460, y0: 360, y1: 900 } : { x0: 120, x1: 960, y0: 520, y1: 1330 };
 const yOf = v => P.y1 - (P.y1 - P.y0) * v / max;
 const n = bars.length, slot = (P.x1 - P.x0) / n, bw = Math.min(WIDE ? 200 : 210, slot * 0.56);
 

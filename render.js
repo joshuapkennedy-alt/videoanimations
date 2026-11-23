@@ -6,14 +6,14 @@ const { chromium } = require('playwright'); const { spawn } = require('child_pro
 const [page_, dur, out, extra] = process.argv.slice(2); const FPS = 30;
 (async () => {
   const b = await chromium.launch(); const stills = dur === 'stills';
-  const p = await b.newPage({ viewport: { width: +(process.env.VW || 1080), height: +(process.env.VH || 1920) }, deviceScaleFactor: stills ? +(process.env.DPR || 1) : 2 });
+  const p = await b.newPage({ viewport: { width: +(process.env.VW || 1080), height: +(process.env.VH || 1920) }, deviceScaleFactor: +(process.env.DPR || (stills ? 1 : 2)) });
   p.on('pageerror', e => console.error('PAGE ERROR', e.message));
   await p.goto('file://' + path.resolve(page_));
   await p.evaluate(() => Promise.all(['700 50px PF', 'italic 400 50px PFI', '400 20px Inter', '500 20px Inter', '600 20px Inter', '700 20px Inter'].map(f => document.fonts.load(f))).then(() => document.fonts.ready));
   await p.waitForFunction(() => window.ready === undefined || window.ready === true);
   const el = await p.$('#stage');
   if (stills) { fs.mkdirSync(out, { recursive: true }); for (const t of extra.split(',').map(Number)) { await p.evaluate(t => render(t), t); await el.screenshot({ path: `${out}/t${t}.png` }); } await b.close(); return; }
-  const ff = spawn('ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-', '-c:v', 'libx264', '-crf', '16', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out]);
+  const ff = spawn(process.env.FFMPEG || 'ffmpeg', ['-v', 'error', '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-', '-c:v', 'libx264', '-crf', '16', '-preset', 'slow', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', out]);
   const N = Math.round(FPS * Number(dur));
   for (let f = 0; f < N; f++) { await p.evaluate(t => render(t), f / FPS); ff.stdin.write(await el.screenshot({ type: 'png' })); }
   ff.stdin.end(); await new Promise(r => ff.on('close', r));

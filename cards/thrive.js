@@ -6,11 +6,11 @@ const T0 = 0.9, STEP = 2.5;                       // item k appears at T0 + k*ST
 window.STEP_STARTS = [0, 1, 2, 3].map(k => T0 + k * STEP);
 
 const ITEMS = [
-  { name: 'Rivers', line: 'water holds warmth and keeps frost off the slopes', color: '#5F8BA8',
+  { name: 'Rivers', line: 'valleys trap the warmth', color: '#5F8BA8',
     icon: '<path d="M14 36c8-8 14-8 22 0s14 8 22 0 14-8 22 0"/><path d="M14 52c8-8 14-8 22 0s14 8 22 0 14-8 22 0"/><path d="M14 68c8-8 14-8 22 0s14 8 22 0 14-8 22 0"/>' },
-  { name: 'Terraces', line: 'steep, south-facing slopes catch more sun', color: '#697246',
-    icon: '<path d="M12 82H32V64H50V46H68V28H88"/><path d="M22 82V74M40 64V56M58 46V38M76 28V20"/><circle cx="22" cy="70" r="4"/><circle cx="40" cy="52" r="4"/><circle cx="58" cy="34" r="4"/><circle cx="76" cy="16" r="4"/>' },
-  { name: 'Dry', line: 'low rainfall and long, sunny autumns', color: '#B8925A',
+  { name: 'Slopes', line: 'steep, south-facing slopes catch more sun', color: '#697246',
+    icon: '<path d="M10 84L90 34V84Z"/><circle cx="28" cy="28" r="7"/><path d="M28 10V15M28 41V46M10 28H15M41 28H46M15 15l3 3M38 38l3 3M15 41l3-3M38 18l3-3"/>' },
+  { name: 'Dry', line: 'low rainfall, so less rot', color: '#B8925A',
     icon: '<circle cx="50" cy="50" r="15"/><path d="M50 18V26M50 74V82M18 50H26M74 50H82M27 27l6 6M67 67l6 6M27 73l6-6M67 33l6-6"/>' },
   { name: 'Soil', line: "shell limestone and sandstone store the day's heat", color: '#8A6B4A',
     icon: '<path d="M12 30c12-5 24 5 38 0s26-5 38 0"/><path d="M12 52c12-5 24 5 38 0s26-5 38 0"/><path d="M12 74c12-5 24 5 38 0s26-5 38 0"/><circle cx="30" cy="41" r="3"/><circle cx="62" cy="40" r="3"/><circle cx="46" cy="63" r="3"/><circle cx="76" cy="63" r="3"/>' },
@@ -19,10 +19,11 @@ const ITEMS = [
 // ---- title ----
 const eyebrowStyle = Object.assign({}, T.eyebrow, { font: `600 ${WIDE ? 26 : 26}px Inter`, letterSpacing: WIDE ? '7px' : '5px', whiteSpace: 'nowrap' });
 const titleStyle = Object.assign({}, T.title, { font: `700 ${WIDE ? 104 : 98}px PF`, whiteSpace: 'nowrap' });
-const ty = WIDE ? 120 : 330;
-fadeIn(text(SW / 2, ty, SW - 80, "GERMANY'S NORTHERNMOST QUALITY WINE REGION", eyebrowStyle), 0.15);
-fadeIn(text(SW / 2, ty + (WIDE ? 50 : 58), SW - 80, 'Thriving at the Edge', titleStyle), 0.3);
-const rule = div({ left: (SW / 2 - 70) + 'px', top: (ty + (WIDE ? 190 : 200)) + 'px', width: '140px', height: '3px', background: '#C3A06A', transformOrigin: 'center' });
+const ty = WIDE ? 120 : 150;
+const CX = WIDE ? SW / 2 : 495, CW = WIDE ? SW - 80 : 900;   // 9:16: column x 45-945, so the ~912 px title stays 120+ px clear of the right edge
+fadeIn(text(CX, ty, WIDE ? CW : 960, "GERMANY'S NORTHERNMOST QUALITY-WINE REGION", eyebrowStyle), 0.15);
+fadeIn(text(CX, ty + (WIDE ? 50 : 58), WIDE ? CW : 960, 'Thriving at the Edge', titleStyle), 0.3);
+const rule = div({ left: (CX - 70) + 'px', top: (ty + (WIDE ? 190 : 200)) + 'px', width: '140px', height: '3px', background: '#C3A06A', transformOrigin: 'center' });
 anims.push(t => { const k = ease(seg(t, 0.5, 1.0)); rule.style.transform = `scaleX(${k})`; });
 
 // ---- items ----
@@ -46,19 +47,18 @@ ITEMS.forEach((it, k) => {
     head = div({ position: 'static', font: '700 62px PF', color: C.ink, marginTop: '34px', lineHeight: '1.05' }, it.name, box);
     sub = div({ position: 'static', font: '400 28px Inter', color: C.sub, marginTop: '18px', lineHeight: '1.35' }, it.line, box);
   } else {
-    const y = 630 + k * 262;
-    box = div({ left: '70px', top: y + 'px', width: (SW - 140) + 'px', height: '232px', background: '#F6EFE1', border: '2px solid #DCCDB2', borderRadius: '16px', boxSizing: 'border-box',
-      display: 'flex', alignItems: 'center', padding: '0 40px', gap: '40px' });
+    const cw = 430, ch = 460, gap = 40, x = CX - CW / 2 + (k % 2) * (cw + gap), y = 440 + Math.floor(k / 2) * (ch + gap);
+    box = div({ left: x + 'px', top: y + 'px', width: cw + 'px', height: ch + 'px', background: '#F6EFE1', border: '2px solid #DCCDB2', borderRadius: '16px', boxSizing: 'border-box',
+      display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '50px 34px 0' });
     badge = iconBadge(box, 150, it);
-    const col = div({ position: 'static', flex: '1' }, '', box);
-    head = div({ position: 'static', font: '700 66px PF', color: C.ink, lineHeight: '1.05' }, it.name, col);
-    sub = div({ position: 'static', font: '400 31px Inter', color: C.sub, marginTop: '12px', lineHeight: '1.35' }, it.line, col);
+    head = div({ position: 'static', font: '700 64px PF', color: C.ink, marginTop: '32px', lineHeight: '1.05' }, it.name, box);
+    sub = div({ position: 'static', font: '400 31px Inter', color: C.sub, marginTop: '16px', lineHeight: '1.35' }, it.line, box);
   }
   const ic = badge.querySelector('.ic'), ring = badge.querySelector('.ring');
   const strokes = [...ic.children].map(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; return [p, L]; });
   const backOut = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
   anims.push(t => {
-    const b = eout(seg(t, a, a + 0.45)); box.style.opacity = b; box.style.translate = WIDE ? `0 ${30 * (1 - b)}px` : `${-40 * (1 - b)}px 0`;
+    const b = eout(seg(t, a, a + 0.45)); box.style.opacity = b; box.style.translate = `0 ${30 * (1 - b)}px`;
     const r = seg(t, a + 0.1, a + 0.55); ring.setAttribute('transform', `translate(50 50) scale(${r > 0 ? backOut(r) : 0}) translate(-50 -50)`);
     const d = ease(seg(t, a + 0.35, a + 1.05)); strokes.forEach(([p, L]) => p.style.strokeDashoffset = L * (1 - d));
     const h = eout(seg(t, a + 0.3, a + 0.7)); head.style.opacity = h; head.style.translate = `0 ${12 * (1 - h)}px`;
