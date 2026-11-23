@@ -1,0 +1,75 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:#EEE5D4}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#EEE5D4}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+const LX = 275, RX = 805, W = 480;
+const LN = Object.assign({}, T.note, { font: '400 22px Inter' });
+const PY0 = 480, PY1 = 1320, WT = 250, WB = 490;
+// a column is a full-stage layer we can slide horizontally
+const col = () => div({ left: 0, top: 0, width: '1080px', height: '1920px' });
+
+const dv = div({ left: '539px', top: '190px', width: '2px', height: '1540px', background: C.divider });
+anims.push(t => { dv.style.opacity = 1 - Math.sin(Math.PI * seg(t, 1.8, 2.6)); });
+
+// ---- France (leaves) ----
+const fr = col();
+text(LX, 190, W, 'France', T.title, fr);
+text(LX, 296, W, 'Ranked by place, with rules<br>on how it is made', T.sub, fr);
+text(LX, 410, W, 'BURGUNDY EXAMPLE', T.eyebrow, fr);
+pyramid(fr, LX, PY0, PY1, WT, WB, [
+  { name: 'Grand Cru', sub: 'e.g. Chambertin', color: '#6B2636', light: 1 },
+  { name: 'Premier Cru', sub: 'named vineyards', color: '#823D3E', light: 1 },
+  { name: 'Village', sub: 'e.g. Gevrey-Chambertin', color: '#A0615D', light: 1 },
+  { name: 'AOP', sub: 'region · e.g. Bourgogne', color: '#BC8A84' },
+  { name: 'IGP', sub: 'country wine', color: '#D5B4AD' },
+  { name: 'Vin de France', sub: 'table wine', color: '#E6D1CD' }]);
+text(LX, 1372, W, 'EACH LEVEL IS ITS OWN AOP', T.eyebrow, fr);
+text(LX, 1412, W, 'stricter yields and ripeness at every step up<br>plus grape varieties · vine density<br>pruning · ageing', LN, fr);
+text(LX, 1590, W, 'The land is ranked:<br>a Grand Cru site is fixed', T.ital, fr);
+anims.push(t => { const k = ease(seg(t, 1.8, 2.6)); fr.style.translate = `${-640 * k}px 0`; fr.style.opacity = 1 - seg(t, 1.8, 2.4); });
+
+// ---- Germany 1971 (moves from right column to left) ----
+const g71 = col();
+text(RX, 190, W, 'Germany', T.title, g71);
+const s71a = text(RX, 296, W, 'Ranked by how ripe<br>the grapes were', T.sub, g71);
+const s71b = text(RX, 296, W, 'Ranked by ripeness', T.sub, g71);
+text(RX, 410, W, '1971 WINE LAW', T.eyebrow, g71);
+pyramid(g71, RX, PY0, PY1, WT, WB, [
+  { name: 'Prädikatswein', sub: 'Kabinett to TBA', color: '#9E773A', light: 1 },
+  { name: 'Qualitätswein', sub: 'from one of 13 regions', color: '#CDA767' },
+  { name: 'Landwein', sub: 'country wine', color: '#E0C895' },
+  { name: 'Deutscher Tafelwein', sub: 'table wine', color: '#EFE1C6' }], { nameSize: 36 });
+const e71 = text(RX, 1372, W, 'THE 1971 LAW ALSO SET', T.eyebrow, g71);
+const n71a = text(RX, 1412, W, 'approved grape varieties<br>minimum must weight<br>official test number (A.P.-Nr.)<br>for each wine', LN, g71);
+const n71b = text(RX, 1412, W, 'approved varieties · must weight<br>official test number (A.P.-Nr.)', T.note, g71);
+const i71a = text(RX, 1590, W, 'The harvest is ranked:<br>any site can reach the top', T.ital, g71);
+const i71b = text(RX, 1590, W, 'The harvest is ranked', T.ital, g71);
+anims.push(t => { g71.style.translate = `${(LX - RX) * ease(seg(t, 1.8, 2.6))}px 0`; });
+[s71a, n71a, i71a].forEach(e => fadeOut(e, 1.8, 0.35));
+[s71b, n71b, i71b].forEach(e => fadeIn(e, 2.2, 0.4, 0));
+
+// ---- Germany 2021 (builds in the right column) ----
+const g21 = col();
+fadeIn(text(RX, 190, W, 'Germany', T.title, g21), 2.6);
+fadeIn(text(RX, 296, W, 'Ranked by place, like France', T.sub, g21), 2.7);
+fadeIn(text(RX, 410, W, '2021 WINE LAW', T.eyebrow, g21), 2.8);
+const p21 = pyramid(g21, RX, PY0, PY1, WT, WB, [
+  { name: 'Lagenwein', sub: 'single vineyard', extra: 'regions may add<br>Erstes · Großes Gewächs', color: '#4D5430', light: 1, h: 1.45 },
+  { name: 'Ortswein', sub: 'one village', color: '#697246', light: 1 },
+  { name: 'Region', sub: 'e.g. Bereich Bernkastel', color: '#89915E', light: 1 },
+  { name: 'Anbaugebiet', sub: 'one of 13 regions', color: '#ADB484' },
+  { name: 'Landwein', sub: 'country wine', color: '#CBD0AC' },
+  { name: 'Deutscher Wein', sub: 'table wine', color: '#E3E6D0' }], { nameSize: 32, subSize: 20, extraSize: 17 });
+buildUp(p21, 3.0);
+fadeIn(p21[0].layer.extraEl, 5.3, 0.4, 0);
+fadeIn(text(RX, 1372, W, 'AND STILL KEEPS', T.eyebrow, g21), 5.5);
+fadeIn(text(RX, 1412, W, 'Kabinett to TBA as ripeness terms<br>stricter rules as the origin narrows', T.note, g21), 5.6);
+fadeIn(text(RX, 1590, W, 'The land is ranked now too', T.ital, g21), 6.0);
+render(0);
+</script></body></html>

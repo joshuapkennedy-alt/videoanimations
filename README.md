@@ -1,6 +1,6 @@
 # Saale-Unstrut infographics
 
-Source for the animated cards in the Saale-Unstrut video. Each card is an HTML page that draws one frame for a given time `t`; `render.js` steps through it in headless Chromium and pipes the frames to ffmpeg.
+Source for the animated cards in the Saale-Unstrut video, plus the vertical (9:16) versions of the earlier "big picture" and wine-label animations (see [Big picture and wine label](#big-picture-and-wine-label)). Each card is an HTML page that draws one frame for a given time `t`; `render.js` steps through it in headless Chromium and pipes the frames to ffmpeg.
 
 ## Requirements
 
@@ -85,6 +85,8 @@ Writes `t2.5.png` and so on. `DPR=2` gives 4K output; leave it off for quick 1×
 - `cards/paths.js`: country outlines for the 51°N card, in the same projection as the map images
 - `fonts/`: bundled fonts, `fonts.css` and licences
 - `tools/map/`: how the map assets were made (below)
+- `big_picture/`: the big-picture renderers and conversion scripts
+- `wine_label/`: the wine-label conversion
 
 ## Changing the cards
 
@@ -105,3 +107,36 @@ node cands.mjs cands.json && python3 fit.py ../../cards/muted.png cands.json fit
 node paths.mjs fit.json ../../cards/paths.js
 python3 build_map_assets.py <rivers_regions_16x9_4K.mp4> ../../cards
 ```
+
+## Big picture and wine label
+
+All of these are 9:16 only, 30 fps, 2160×3840. The first group is drawn from scratch; the second converts your original 16:9 videos, which aren't in the repo, so pass their paths in.
+
+### Drawn from scratch
+
+| Animation | Command | Duration |
+|---|---|---|
+| The big picture, chapter cards 1–7 | `node big_picture/render_bp.js out/` | 4 s each (120 frames) |
+| River warmth, night to day (3 terraces, final) | `node big_picture/render_river_warmth.js big_picture/river_warmth.html out/river_warmth_9x16_4K_3terraces.mp4` | 10 s (300 frames) |
+| River warmth, earlier 5- and 6-terrace versions | same, with `river_warmth_5terraces.html` or `river_warmth_6terraces.html` | 10 s |
+| France vs Germany, side by side (leads into the squeeze) | `node render.js cards/fvg2.html 10 out/france_vs_germany_side_by_side_9x16_4K.mp4 out/france_vs_germany_side_by_side_9x16_endframe.png` | 10 s (300 frames) |
+| France vs Germany, stacked then into columns | `node render.js cards/fvg.html 10 ...` | 10 s |
+| Systems squeeze to 2021 | `node render.js cards/squeeze.html 9 ...` | 9 s (270 frames) |
+| Germany 2021 vs VDP, continuing from the squeeze | `node render.js cards/vdp2.html 10 ...` | 10 s (300 frames) |
+| Germany 2021 vs VDP, standalone | `node render.js cards/vdp.html 10 ...` | 10 s |
+
+The three-clip sequence `fvg2` → `squeeze` → `vdp2` is built so each clip opens on the previous one's last frame.
+
+### Converted from your 16:9 videos
+
+| Animation | Command | Source video | Duration |
+|---|---|---|---|
+| Rivers & regions (plain, pointers, pointers + title) | `big_picture/rivers_regions.sh <plain.mp4> <pointers.mp4> out/` | `rivers_regions_16x9_4K.mp4`, `rivers_regions_16x9_4K_pointers.mp4` | 8 s, 15.5 s, 15.5 s |
+| Outlying vineyards | `big_picture/outlying_vineyards.sh <source.mp4> out/outlying_vineyards_9x16_4K.mp4 out/outlying_vineyards_9x16_endframe.png` | `outlying_vineyards_16x9.mp4` | 12 s (360 frames) |
+| Wine label explained (full, 6 steps, end frames, step 0 still) | `wine_label/wine_label.sh <source.mp4> out/wine_label/` | `wine_label_explained_all_steps_16x9.mp4` | 15 s; steps 2.5 s (75 frames) each |
+
+How the conversions work:
+
+- **Rivers & regions** crops the map out of the 4K frame onto a 2160×3840 canvas whose background is a patch of the source's own background, so the padding matches exactly. The pointers version uses a wider crop so every river label stays in frame. The title version adds `big_picture/rivers_title.html`, fading in at 0.3 s.
+- **Outlying vineyards** crops the map, erases the original leader lines frame by frame (`big_picture/ov_masks.json`, made by `ov_mask.py` from the last frame), enlarges it to the full width, and draws new labels from `cards/ov_labels.html` on top.
+- **Wine label** keeps the bottle, label and markers from the source at full 4K (not resized) in the top half, and draws the list in `cards/label_list.html` underneath, each item timed to its marker.

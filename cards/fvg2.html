@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:#EEE5D4}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#EEE5D4}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+// France and Germany 1971 build side by side, ending on the opening frame of systems_squeeze.
+const LX = 275, RX = 805, W = 480;
+const PY0 = 480, PY1 = 1320, WT = 250, WB = 490;
+const LN = Object.assign({}, T.note, { font: '400 22px Inter' });
+
+div({ left: '539px', top: '190px', width: '2px', height: '1540px', background: C.divider });
+
+// ---- France ----
+fadeIn(text(LX, 190, W, 'France', T.title), 0.25);
+fadeIn(text(LX, 296, W, 'Ranked by place, with rules<br>on how it is made', T.sub), 0.35);
+fadeIn(text(LX, 410, W, 'BURGUNDY EXAMPLE', T.eyebrow), 0.45);
+buildUp(pyramid(stage, LX, PY0, PY1, WT, WB, [
+  { name: 'Grand Cru', sub: 'e.g. Chambertin', color: '#6B2636', light: 1 },
+  { name: 'Premier Cru', sub: 'named vineyards', color: '#823D3E', light: 1 },
+  { name: 'Village', sub: 'e.g. Gevrey-Chambertin', color: '#A0615D', light: 1 },
+  { name: 'AOP', sub: 'region · e.g. Bourgogne', color: '#BC8A84' },
+  { name: 'IGP', sub: 'country wine', color: '#D5B4AD' },
+  { name: 'Vin de France', sub: 'table wine', color: '#E6D1CD' }]), 0.95, 0.27);
+fadeIn(text(LX, 1372, W, 'EACH LEVEL IS ITS OWN AOP', T.eyebrow), 2.8);
+fadeIn(text(LX, 1412, W, 'stricter yields and ripeness at every step up<br>plus grape varieties · vine density<br>pruning · ageing', LN), 2.9);
+fadeIn(text(LX, 1590, W, 'The land is ranked:<br>a Grand Cru site is fixed', T.ital), 3.3);
+
+// ---- Germany 1971 ----
+fadeIn(text(RX, 190, W, 'Germany', T.title), 4.6);
+fadeIn(text(RX, 296, W, 'Ranked by how ripe<br>the grapes were', T.sub), 4.7);
+fadeIn(text(RX, 410, W, '1971 WINE LAW', T.eyebrow), 4.8);
+buildUp(pyramid(stage, RX, PY0, PY1, WT, WB, [
+  { name: 'Prädikatswein', sub: 'Kabinett to TBA', color: '#9E773A', light: 1 },
+  { name: 'Qualitätswein', sub: 'from one of 13 regions', color: '#CDA767' },
+  { name: 'Landwein', sub: 'country wine', color: '#E0C895' },
+  { name: 'Deutscher Tafelwein', sub: 'table wine', color: '#EFE1C6' }], { nameSize: 36 }), 5.2, 0.33);
+fadeIn(text(RX, 1372, W, 'THE 1971 LAW ALSO SET', T.eyebrow), 6.8);
+fadeIn(text(RX, 1412, W, 'approved grape varieties<br>minimum must weight<br>official test number (A.P.-Nr.)<br>for each wine', LN), 6.9);
+fadeIn(text(RX, 1590, W, 'The harvest is ranked:<br>any site can reach the top', T.ital), 7.3);
+render(0);
+</script></body></html>

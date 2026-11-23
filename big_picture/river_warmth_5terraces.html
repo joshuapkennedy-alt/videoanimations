@@ -1,0 +1,206 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body{margin:0;background:#EEE5D4}svg{display:block}</style></head>
+<body>
+<svg id="s" width="1080" height="1920" viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="panel"><rect x="40" y="80" width="1000" height="1760"/></clipPath>
+  <pattern id="earth" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(-32)">
+    <rect width="40" height="40" fill="#7B6B5A"/><rect width="40" height="17" fill="#746658"/>
+  </pattern>
+  <radialGradient id="sunglow"><stop offset="0" stop-color="#F6E3B6" stop-opacity=".9"/><stop offset="1" stop-color="#F6E3B6" stop-opacity="0"/></radialGradient>
+  <radialGradient id="warm"><stop offset="0" stop-color="#E0A866" stop-opacity=".55"/><stop offset="1" stop-color="#E0A866" stop-opacity="0"/></radialGradient>
+  <radialGradient id="vglow"><stop offset="0" stop-color="#FBE7B4" stop-opacity=".95"/><stop offset="1" stop-color="#FBE7B4" stop-opacity="0"/></radialGradient>
+</defs>
+<rect width="1080" height="1920" fill="#EEE5D4"/>
+<g clip-path="url(#panel)" id="scene"></g>
+<rect x="40" y="80" width="1000" height="1760" fill="none" stroke="#281D16" stroke-width="3"/>
+</svg>
+<script>
+const NS='http://www.w3.org/2000/svg';
+const scene=document.getElementById('scene');
+function el(tag,attrs,parent=scene){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);parent.appendChild(e);return e}
+function g(attrs={},parent=scene){return el('g',attrs,parent)}
+const clamp=x=>Math.max(0,Math.min(1,x)), seg=(t,a,b)=>clamp((t-a)/(b-a));
+const ease=x=>x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2, eout=x=>1-Math.pow(1-x,3);
+let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+
+// wavy line between two points, amplitude tapered at the ends
+function wave(x1,y1,x2,y2,amp=7,wl=44,ph=0){
+  const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;let d='';
+  for(let s=0;s<=L;s+=4){const k=s/L,a=amp*Math.min(1,s/30,(L-s)/30)*Math.sin(2*Math.PI*s/wl+ph);
+    d+=(s?'L':'M')+(x1+dx*k+nx*a).toFixed(1)+' '+(y1+dy*k+ny*a).toFixed(1)}
+  return d;
+}
+// wavy line along a polyline
+function wavePoly(pts,amp=7,wl=44,ph=0){
+  let L=0;const segs=[];for(let i=1;i<pts.length;i++){const l=Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]);segs.push(l);L+=l}
+  let d='',acc=0;
+  for(let i=1;i<pts.length;i++){const [x1,y1]=pts[i-1],[x2,y2]=pts[i],l=segs[i-1],dx=(x2-x1)/l,dy=(y2-y1)/l;
+    for(let s=0;s<l;s+=4){const S=acc+s,a=amp*Math.min(1,S/30,(L-S)/30)*Math.sin(2*Math.PI*S/wl+ph);
+      d+=(d?'L':'M')+(x1+dx*s-dy*a).toFixed(1)+' '+(y1+dy*s+dx*a).toFixed(1)}
+    acc+=l}
+  return d;
+}
+const anims=[]; // functions of t
+
+// ---------- sky ----------
+el('rect',{x:40,y:80,width:1000,height:1760,fill:'#F9F4E8'});
+
+// sun (behind the hills so it can rise)
+const SX=860,SY=690;
+const sunG=g();
+el('circle',{cx:0,cy:0,r:150,fill:'url(#sunglow)'},sunG);
+const spikes=g({stroke:'#D1A055','stroke-width':6,'stroke-linecap':'round'},sunG);
+[[0,92,128],[28,96,116],[55,92,136],[85,98,114],[115,92,130],[150,96,112],[180,92,134],[212,98,116],[245,92,128],[272,96,114],[300,92,138],[330,98,116]].forEach(([a,r1,r2])=>{const r=a*Math.PI/180;el('line',{x1:Math.cos(r)*r1,y1:Math.sin(r)*r1,x2:Math.cos(r)*r2,y2:Math.sin(r)*r2},spikes)});
+el('circle',{r:78,fill:'#E4B964',stroke:'#281D16','stroke-width':4},sunG);
+el('circle',{cx:6,cy:-4,r:58,fill:'#E8C273'},sunG);
+anims.push(t=>{const k=ease(seg(t,5.0,6.3));sunG.setAttribute('transform',`translate(${SX} ${SY+600*(1-k)})`);
+  const sp=eout(seg(t,5.9,6.6));spikes.setAttribute('transform',`scale(${0.85+0.15*sp}) rotate(${t*4})`);spikes.setAttribute('opacity',sp)});
+
+// clouds and birds
+function cloud(x,y,s){const c=g({transform:`translate(${x} ${y}) scale(${s})`});
+  el('path',{d:'M0 60 Q-4 30 26 30 Q34 0 66 6 Q88 -10 108 14 Q140 10 142 46 Q160 50 158 60 Z',fill:'#FCFAF2',stroke:'#D9CBB0','stroke-width':3},c);return c}
+cloud(330,190,1.25);cloud(650,240,0.9);
+const birds=g({fill:'none',stroke:'#281D16','stroke-width':3,'stroke-linecap':'round'});
+el('path',{d:'M470 370 q10 -10 20 0 q10 -10 20 0'},birds);el('path',{d:'M530 340 q8 -8 16 0 q8 -8 16 0'},birds);
+anims.push(t=>birds.setAttribute('transform',`translate(${t*6} ${Math.sin(t*2)*3})`));
+
+// ---------- hills ----------
+el('path',{d:'M40 1000 C250 940 420 900 620 930 S900 900 1040 860 V1840 H40Z',fill:'#E9DCC5',stroke:'#D2C0A0','stroke-width':2});
+el('path',{d:'M40 1130 C260 1090 480 1080 700 1090 S920 1060 1040 1040 V1840 H40Z',fill:'#E0CFB3',stroke:'#CDB998','stroke-width':2});
+el('path',{d:'M300 1300 C500 1250 760 1190 1040 1150 V1840 H300Z',fill:'#DBC9A9',stroke:'#C9B48F','stroke-width':2});
+const fields=g({fill:'none',stroke:'#C4B08B','stroke-width':4,'stroke-dasharray':'10 9','stroke-linecap':'round'});
+for(let i=0;i<4;i++)el('path',{d:`M${720+i*6} ${1000-i*16} Q860 ${975-i*18} 1000 ${968-i*20}`},fields);
+for(let i=0;i<4;i++)el('path',{d:`M${800-i*10} ${1240-i*22} Q920 ${1200-i*24} 1030 ${1185-i*24}`},fields);
+[[640,935,16],[790,975,14],[905,1010,18],[975,1110,22]].forEach(([x,y,h])=>el('path',{d:`M${x} ${y} q-6 ${-h*.6} 0 ${-h} q6 ${h*.4} 0 ${h}z`,fill:'#A8A27C'}));
+
+// ---------- terraces & ground ----------
+const T=[];const N=5,X0=40,Y0=780,DX=104,DY=124,TOP=70;
+for(let k=0;k<N;k++)T.push([X0+k*DX,Y0+k*DY]);
+const RL=660,RR=900,RY=1450; // river left/right bank and water level
+let prof=`M40 ${Y0}`;T.forEach(([x,y])=>{prof+=` L${x+TOP} ${y} L${x+DX} ${y+DY}`});
+const endX=X0+N*DX,endY=Y0+N*DY;
+prof+=` L${RL-12} ${RY-12} L${RL} ${RY}`;
+const ground=prof+` C${RL+10} ${RY+80} ${RR-10} ${RY+80} ${RR} ${RY} L1040 ${RY-6} V1840 H40 Z`;
+el('path',{d:ground,fill:'url(#earth)'});
+// faint strata ticks
+for(let i=0;i<22;i++){const x=60+rnd()*960,y=Math.max(900,0)+rnd()*900;const d=`M${x} ${y} l14 22`;
+  if(y>(x<RL? Y0+(x-40)/DX*DY+60 : RY+60))el('path',{d,stroke:'#685A4C','stroke-width':2.5,'stroke-linecap':'round'})}
+// river channel (soil lining, water, pebbles)
+el('path',{d:`M${RL-22} ${RY-4} C${RL-6} ${RY+120} ${RR+6} ${RY+120} ${RR+22} ${RY-6} L${RR} ${RY} C${RR-10} ${RY+80} ${RL+10} ${RY+80} ${RL} ${RY}Z`,fill:'#B3894A',stroke:'#4E3B26','stroke-width':2});
+const water=el('path',{d:`M${RL} ${RY} C${RL+10} ${RY+80} ${RR-10} ${RY+80} ${RR} ${RY} Z`,fill:'#6D8B98'});
+el('path',{d:`M${RL+2} ${RY} H${RR-2} V${RY+18} H${RL+2}Z`,fill:'#87A2B0'});
+el('path',{d:`M${RL} ${RY} C${RL+10} ${RY+80} ${RR-10} ${RY+80} ${RR} ${RY}`,fill:'none',stroke:'#281D16','stroke-width':4});
+const glints=g({stroke:'#EAF1F2','stroke-width':3,'stroke-linecap':'round'});
+[[672,RY+12,34],[740,RY+24,46],[810,RY+12,30],[700,RY+38,26],[790,RY+40,22]].forEach(([x,y,w])=>el('line',{x1:x,y1:y,x2:x+w,y2:y},glints));
+anims.push(t=>glints.setAttribute('transform',`translate(${Math.sin(t*2.2)*6} 0)`));
+for(let i=0;i<46;i++){const a=rnd()*Math.PI,r=rnd();const x=RL+40+rnd()*(RR-RL-80),y=RY+110+rnd()*70;
+  el('ellipse',{cx:x,cy:y,rx:7+rnd()*5,ry:5+rnd()*3,fill:'#A8A096',stroke:'#5E554B','stroke-width':1.5})}
+// terraces: soil, stone walls, surface line
+T.forEach(([x,y],k)=>{
+  el('path',{d:`M${x} ${y} L${x+TOP} ${y} L${x+TOP+8} ${y+42} L${x-2} ${y+42}Z`,fill:'#B2894C'});
+  const w=el('path',{d:`M${x+TOP} ${y} L${x+DX} ${y+DY} L${x+DX-16} ${y+DY} L${x+TOP-14} ${y}Z`,fill:'#9A9084',stroke:'#281D16','stroke-width':2});
+  for(let j=1;j<7;j++){const f=j/7;el('line',{x1:x+TOP-14+f*(DX-TOP+14-16)+0,y1:y+f*DY,x2:x+TOP+f*(DX-TOP),y2:y+f*DY,stroke:'#281D16','stroke-width':1.8})}
+});
+el('path',{d:prof,fill:'none',stroke:'#281D16','stroke-width':4,'stroke-linejoin':'round'});
+// right bank soil + grass
+el('path',{d:`M${RR} ${RY} L1040 ${RY-6} V${RY+34} L${RR+14} ${RY+40}Z`,fill:'#B3894A'});
+el('path',{d:`M${RR} ${RY} L1040 ${RY-6}`,stroke:'#281D16','stroke-width':4});
+const grass=g({stroke:'#7D8A5A','stroke-width':2,'stroke-linecap':'round'});
+for(let x=RR+14;x<1036;x+=9){const y=RY-(x-RR)*6/(1040-RR);el('path',{d:`M${x} ${y} l-3 -10 M${x+3} ${y} l0 -12 M${x+6} ${y} l3 -9`},grass)}
+// tree + cypress on the right bank (squeezed)
+function tree(x,y,s){const t=g({transform:`translate(${x} ${y}) scale(${s})`});
+  el('line',{x1:0,y1:0,x2:0,y2:-70,stroke:'#4A3A2C','stroke-width':6},t);
+  [[-22,-80,26],[22,-80,26],[0,-104,30],[0,-72,24]].forEach(([cx,cy,r])=>el('circle',{cx,cy,r,fill:'#6B7344',stroke:'#2B2A22','stroke-width':3},t));return t}
+tree(945,RY-5,0.95);
+el('path',{d:`M1010 ${RY-4} q-14 -50 0 -100 q14 50 0 100z`,fill:'#6B7344',stroke:'#2B2A22','stroke-width':2.5});
+
+// ---------- vines ----------
+const VINES=[];
+T.forEach(([x,y],k)=>{[20,50].forEach(o=>{
+  const vx=x+o,vy=y;VINES.push([vx,vy-72]);const vs=g({transform:`translate(${vx} ${vy}) scale(1.25) translate(${-vx} ${-vy})`});
+  const r=g({stroke:'#4A3A2C','stroke-width':2.2,fill:'none','stroke-linecap':'round'});
+  for(let i=0;i<4;i++){el('path',{d:`M${vx} ${vy} q${(rnd()-.5)*30} 40 ${(rnd()-.5)*36} ${60+rnd()*40}`},r)}
+  el('line',{x1:vx,y1:vy,x2:vx,y2:vy-44,stroke:'#4A3A2C','stroke-width':4.5},vs);
+  [[-11,-52,12],[11,-52,12],[0,-64,13]].forEach(([cx,cy,rr])=>el('circle',{cx:vx+cx,cy:vy+cy,r:rr,fill:'#6B7344',stroke:'#2B2A22','stroke-width':2.5},vs));
+  [[4,-40],[9,-40],[6.5,-35],[6.5,-30]].forEach(([cx,cy])=>el('circle',{cx:vx+cx,cy:vy+cy,r:3.2,fill:'#7A2A3A'},vs));
+})});
+
+// ---------- sun rays (day) ----------
+const rays=g({fill:'none','stroke-linecap':'round'});
+function drawPath(d,stroke,w,start,dur,parent=rays){
+  const p=el('path',{d,stroke,'stroke-width':w},parent);const L=p.getTotalLength();
+  p.setAttribute('stroke-dasharray',L);
+  anims.push(t=>{const k=ease(seg(t,start,start+dur));p.setAttribute('stroke-dashoffset',L*(1-k));p.setAttribute('opacity',k>0?1:0)});
+  return {p,L};
+}
+function shimmer(base,start,period){
+  const p=el('path',{d:base.p.getAttribute('d'),stroke:'#FBE6AE','stroke-width':6},rays);const L=base.L,len=70;
+  p.setAttribute('stroke-dasharray',`${len} ${L+len}`);
+  anims.push(t=>{if(t<start){p.setAttribute('opacity',0);return}const ph=((t-start)/period)%1;
+    p.setAttribute('stroke-dashoffset',len-ph*(L+len));p.setAttribute('opacity',Math.min(1,(t-start)*3))});
+}
+const sunEdge=(dx,dy)=>[SX+dx,SY+dy];
+// direct rays to the upper vines
+const direct=[[0,-6,0.0],[2,8,0.1],[4,22,0.2]].map(([vi,off,dl],i)=>{const [vx,vy]=VINES[vi];
+  const [x1,y1]=sunEdge(-84,off-14);const r=drawPath(wave(x1,y1,vx+6,vy+14,7,46,i),'#C4925A',3.4,6.4+dl,1.0);shimmer(r,7.6+dl*2,1.6);return r});
+// rays that hit the river and bounce up to the lower vines
+const hits=[[690,3],[735,5],[780,7],[825,9]];
+hits.forEach(([hx,vi],i)=>{const [vx,vy]=VINES[vi];
+  const an=(165-i*22)*Math.PI/180;const [x1,y1]=sunEdge(Math.cos(an)*84,Math.sin(an)*84);
+  const a=drawPath(wave(x1,y1,hx,RY+2,6,58,i*1.3),'#C4925A',3.4,6.5+i*0.08,0.9);
+  const b=drawPath(wave(hx,RY+2,vx+4,vy+16,6,40,i),'#D2A468',3.2,7.25+i*0.08,0.8);
+  shimmer(a,7.8+i*.2,1.5);shimmer(b,8.2+i*.2,1.3);
+  const sp=el('circle',{cx:hx,cy:RY+2,r:22,fill:'url(#vglow)'},rays);
+  anims.push(t=>{const k=seg(t,7.2+i*.08,7.5+i*.08);sp.setAttribute('opacity',k*(0.75+0.25*Math.sin(t*5+i)))});
+});
+// warm glow on the vines once the light arrives
+const vg=g();
+[0,2,3,4,5,7,9].forEach((vi,i)=>{const [vx,vy]=VINES[vi];const c=el('circle',{cx:vx,cy:vy+4,r:34,fill:'url(#vglow)'},vg);
+  anims.push(t=>{const k=seg(t,7.6+i*.1,8.1+i*.1);c.setAttribute('opacity',k*(0.55+0.25*Math.sin(t*3+i)))})});
+
+// ---------- night ----------
+const night=el('rect',{x:40,y:80,width:1000,height:1760,fill:'#111F31'});
+const nfx=g();
+for(let i=0;i<60;i++){const x=50+rnd()*980,y=95+rnd()*760;if(x<500&&y>620)continue;
+  el('circle',{cx:x,cy:y,r:rnd()<.2?3:1.8,fill:'#E8E4D8',opacity:.4+rnd()*.6},nfx)}
+el('path',{d:'M214 230 a64 64 0 1 0 74 84 a52 52 0 1 1 -74 -84z',fill:'#F2E8D2'},nfx);
+// cold air sliding down the slope
+const cold=g({fill:'none','stroke-linecap':'round'},nfx);
+function coldLine(pts,start,dur,ph){const d=wavePoly(pts,7,52,ph);const p=el('path',{d,stroke:'#9DB9D6','stroke-width':4},cold);const L=p.getTotalLength();
+  p.setAttribute('stroke-dasharray',L);const end=pts[pts.length-1],prev=pts[pts.length-2];const ang=Math.atan2(end[1]-prev[1],end[0]-prev[0])*180/Math.PI;
+  const head=el('path',{d:'M-12 -9 L8 0 L-12 9Z',fill:'#8EA6C2'},cold);
+  anims.push(t=>{const k=ease(seg(t,start,start+dur));p.setAttribute('stroke-dashoffset',L*(1-k));
+    const pt=p.getPointAtLength(L*k);head.setAttribute('transform',`translate(${pt.x} ${pt.y}) rotate(${ang})`);head.setAttribute('opacity',k>0.02?1:0)});}
+coldLine([[90,640],[300,850],[470,1110],[600,1330],[650,1395]],0.6,1.6,0);
+coldLine([[250,560],[450,780],[610,1060],[710,1290],[735,1385]],0.8,1.6,1.4);
+// cold air from the right, carrying frost, stopped at the river
+function frostLine(y1,y2,start,ph){const d=wave(1040,y1,RR+20,y2,6,40,ph);const p=el('path',{d,stroke:'#B9CCE0','stroke-width':3.5},cold);const L=p.getTotalLength();
+  p.setAttribute('stroke-dasharray',L);anims.push(t=>p.setAttribute('stroke-dashoffset',L*(1-ease(seg(t,start,start+1.2)))));}
+frostLine(1050,1330,0.9,0);frostLine(1150,1360,1.1,2);frostLine(1250,1385,1.3,4);
+const flakes=g({stroke:'#F2F5F8','stroke-width':2.2,'stroke-linecap':'round'},nfx);
+for(let i=0;i<26;i++){const x=RR+30+rnd()*150,y=1000+rnd()*360,s=4+rnd()*4,d0=rnd()*1.2;
+  const f=el('path',{d:`M${-s} 0H${s}M${-s*.5} ${-s*.87}L${s*.5} ${s*.87}M${-s*.5} ${s*.87}L${s*.5} ${-s*.87}`},flakes);
+  anims.push(t=>{const k=seg(t,1.0+d0,1.6+d0);f.setAttribute('opacity',k);f.setAttribute('transform',`translate(${x-(t-1)*8} ${y+Math.sin(t*2+i)*4})`)})}
+// fog blanket over the river and low ground
+const fog=g({fill:'#DCE3EA'},nfx);
+[[700,RY-20,140,22],[800,RY-30,170,20],[930,RY-24,150,18],[620,RY-12,90,14],[760,RY-6,180,16],[980,RY-14,120,14]].forEach(([cx,cy,rx,ry],i)=>{
+  const e=el('ellipse',{cx,cy,rx,ry},fog);anims.push(t=>{const k=eout(seg(t,1.3+i*.08,2.3+i*.08));e.setAttribute('opacity',0.32*k);e.setAttribute('transform',`translate(${Math.sin(t*0.9+i)*10} 0)`)})});
+// warmth held by the river
+const warm=el('ellipse',{cx:(RL+RR)/2,cy:RY-10,rx:200,ry:90,fill:'url(#warm)'},nfx);
+anims.push(t=>warm.setAttribute('opacity',eout(seg(t,1.8,2.8))));
+const wisps=g({fill:'none',stroke:'#E0A866','stroke-width':3.5,'stroke-linecap':'round'},nfx);
+[[720,0],[790,1.3]].forEach(([x,ph],i)=>{const p=el('path',{d:wave(x,RY+4,x-30,RY-120,8,36,ph)},wisps);const L=p.getTotalLength();p.setAttribute('stroke-dasharray',L);
+  anims.push(t=>p.setAttribute('stroke-dashoffset',L*(1-ease(seg(t,2.0+i*.3,3.0+i*.3)))))});
+// warmth glowing in the vines
+const vw=g({fill:'none',stroke:'#E3A04E','stroke-width':3,'stroke-linecap':'round'},nfx);
+VINES.forEach(([vx,vy],i)=>{const p=el('path',{d:`M${vx-8} ${vy+30} q6 -6 0 -12 q-6 -6 0 -12`},vw);
+  anims.push(t=>p.setAttribute('opacity',seg(t,2.2+i*.04,2.7+i*.04)*(0.7+0.3*Math.sin(t*4+i))))});
+
+// night -> day
+anims.push(t=>{const k=ease(seg(t,4.4,5.8));night.setAttribute('opacity',0.71*(1-k));nfx.setAttribute('opacity',1-ease(seg(t,4.2,5.3)))});
+
+window.render=t=>anims.forEach(f=>f(t));
+render(0);
+</script></body></html>

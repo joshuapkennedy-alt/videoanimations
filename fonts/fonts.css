@@ -1,5 +1,7 @@
 /* Fonts used by every card. Families: PF (Playfair Display, headings), PFI (Playfair italic), Inter (body). */
+@font-face { font-family: PF; src: url(PlayfairDisplay-SemiBold.ttf); font-weight: 600; }
 @font-face { font-family: PF; src: url(PlayfairDisplay-Bold.ttf); font-weight: 700; }
+@font-face { font-family: PF; src: url(PlayfairDisplay-ExtraBold.ttf); font-weight: 800; }
 @font-face { font-family: PFI; src: url(PlayfairDisplay-Italic.ttf); font-style: italic; font-weight: 400; }
 @font-face { font-family: Inter; src: url(Inter-Regular.otf); font-weight: 400; }
 @font-face { font-family: Inter; src: url(Inter-Medium.otf); font-weight: 500; }

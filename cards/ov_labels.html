@@ -1,0 +1,36 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:transparent}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+.box{position:absolute;background:#F9F4E8;border:2px solid #D3C7AE;border-radius:10px;box-sizing:border-box;padding:14px 22px 16px}
+.box b{display:block;font:700 46px PF;color:#281D16;line-height:1.1}
+.box span{display:block;font:400 23px Inter;color:#685B46;line-height:1.3;margin-top:4px}
+</style></head>
+<body><div id="stage"><svg id="lines" width="1080" height="1920" style="position:absolute;left:0;top:0"></svg></div>
+<script src="lib.js"></script>
+<script>
+// callout labels for the vertical outlying-vineyards map (map crop scaled into a 1080x1920 frame)
+const svg = document.getElementById('lines');
+function leader(x1, y1, x2, y2, a) {
+  const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  Object.entries({ x1, y1, x2: x1, y2: y1, stroke: '#281D16', 'stroke-width': 2.4 }).forEach(([k, v]) => l.setAttribute(k, v));
+  svg.appendChild(l);
+  anims.push(t => { const k = ease(seg(t, a, a + 0.3)); l.setAttribute('x2', x1 + (x2 - x1) * k); l.setAttribute('y2', y1 + (y2 - y1) * k); l.style.opacity = k > 0 ? 1 : 0; });
+}
+function box(x, y, w, title, sub, a, align = 'left') {
+  const b = div({ left: x + 'px', top: y + 'px', width: w + 'px', textAlign: align }, `<b>${title}</b><span>${sub}</span>`);
+  b.className = 'box';
+  anims.push(t => { const k = eout(seg(t, a, a + 0.35)); b.style.opacity = k; b.style.translate = `0 ${10 * (1 - k)}px`; });
+}
+// Sachsen: under the red region
+leader(979, 379, 979, 452, 1.93);  box(700, 450, 340, 'Sachsen', 'wine region', 2.07);
+// Schlieben: left of the dot
+leader(800, 138, 742, 138, 2.53);  box(372, 70, 372, 'Schlieben', 'in Brandenburg,<br>but officially Sachsen', 2.65);
+// Württemberg: right of the blue region
+leader(128, 994, 262, 994, 6.73);  box(260, 944, 330, 'Württemberg', 'wine region', 6.85);
+// Lindau: below the map
+leader(181, 1392, 181, 1542, 7.33); box(40, 1540, 590, 'Lindau', "on Bavaria's shore of Lake Constance,<br>but officially Württemberg", 7.45);
+render(0);
+</script></body></html>

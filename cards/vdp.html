@@ -1,0 +1,72 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:#EEE5D4}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#EEE5D4}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+const GX = 290, GW = 520, VX = 835, VW = 430, BX = 620, BRX = 600;
+const sub28 = Object.assign({}, T.sub, { font: '400 28px Inter' });
+const LN = Object.assign({}, T.note, { font: '400 22px Inter' });
+
+// ---- Germany: the 2021 law ----
+fadeIn(text(GX, 170, GW, 'Germany', T.title), 0.2);
+fadeIn(text(GX, 280, GW, 'What the law sets<br>for every producer', sub28), 0.3);
+fadeIn(text(GX, 380, GW, '2021 WINE LAW', T.eyebrow), 0.4);
+const P = pyramid(stage, GX, 440, 1290, 250, GW, [
+  { name: 'Lagenwein', sub: 'single vineyard', extra: 'regions may add<br>Erstes · Großes Gewächs', color: '#4D5430', light: 1, h: 1.9 },
+  { name: 'Ortswein', sub: 'one village', color: '#697246', light: 1 },
+  { name: 'Region', sub: 'a smaller area within it', color: '#89915E', light: 1 },
+  { name: 'Anbaugebiet', sub: 'one of 13 regions', color: '#ADB484' },
+  { name: 'Landwein', sub: 'country wine', color: '#CBD0AC' },
+  { name: 'Deutscher Wein', sub: 'table wine', color: '#E3E6D0' }], { nameSize: 34, subSize: 21, extraSize: 18 });
+buildUp(P, 0.8, 0.27);
+fadeIn(text(GX, 1345, GW, 'THE 2021 LAW ALSO SETS', T.eyebrow), 2.6);
+fadeIn(text(GX, 1385, GW, 'stricter varieties and yields<br>as the origin narrows<br>collective sites can no longer<br>pose as single vineyards', LN), 2.7);
+
+// ---- VDP: members' classification ----
+fadeIn(text(VX, 170, VW, 'VDP', T.title), 3.4);
+fadeIn(text(VX, 280, VW, 'About 200 estates,<br>stricter rules', sub28), 3.5);
+fadeIn(text(VX, 381, VW, "MEMBERS' CLASSIFICATION", Object.assign({}, T.eyebrow, { font: '600 20px Inter', letterSpacing: '3.5px' })), 3.6);
+
+function connector(y, a) { // dashed line from the pyramid edge to the brackets
+  const x0 = P[0].right(y) + 14;
+  const d = div({ left: x0 + 'px', top: (y - 1) + 'px', width: (BRX - 8 - x0) + 'px', height: 0, borderTop: `2px dashed ${C.dash}`, transformOrigin: 'left' });
+  anims.push(t => { const k = ease(seg(t, a, a + 0.4)); d.style.transform = `scaleX(${k})`; d.style.opacity = k > 0 ? 1 : 0; });
+}
+function bracket(y0, y1, a) {
+  const b = div({ left: BRX + 'px', top: y0 + 'px', width: '10px', height: (y1 - y0) + 'px', border: `3px solid ${C.boxGold}`, borderRight: 'none', boxSizing: 'border-box' });
+  anims.push(t => { const k = ease(seg(t, a, a + 0.3)); b.style.opacity = k; b.style.transform = `scaleY(${k})`; });
+}
+function vbox(y0, y1, html, a, extra = {}) {
+  const b = div(Object.assign({ left: BX + 'px', top: y0 + 'px', width: (1050 - BX) + 'px', height: (y1 - y0) + 'px', background: C.box, borderRadius: '9px',
+    boxSizing: 'border-box', padding: '0 24px', display: 'flex', flexDirection: 'column', justifyContent: 'center', color: C.cream }, extra), html);
+  anims.push(t => { const k = eout(seg(t, a, a + 0.45)); b.style.opacity = k; b.style.translate = `${60 * (1 - k)}px 0`; });
+  return b;
+}
+const nm = (s, size = 32) => `<div style="font:700 ${size}px PF;line-height:1.1">${s}</div>`;
+const ds = (s, c = 'rgba(246,238,223,.85)') => `<div style="font:400 20px Inter;color:${c};margin-top:5px;line-height:1.3">${s}</div>`;
+
+const L = P.map(p => ({ top: p.y, bot: p.y + p.h, mid: p.y + p.h / 2 }));
+const half = (L[0].top + L[0].bot) / 2;
+// Gutswein spans Region + Anbaugebiet
+connector(L[2].mid, 4.0); connector(L[3].mid, 4.0); bracket(L[2].top, L[3].bot, 4.1);
+vbox(L[2].top, L[3].bot, nm('Gutswein', 40) + ds("the estate's entry wine"), 4.2);
+connector(L[1].mid, 4.5); bracket(L[1].top, L[1].bot, 4.55);
+vbox(L[1].top, L[1].bot, nm('Ortswein') + ds("from a village's better sites"), 4.6);
+connector(L[0].top + (L[0].bot - L[0].top) * 0.75, 4.9); bracket(half + 4, L[0].bot, 4.95);
+vbox(half + 4, L[0].bot, nm('Erste Lage') + ds('first-class site, like Premier Cru'), 5.0);
+connector(L[0].top + (L[0].bot - L[0].top) * 0.25, 5.5); bracket(L[0].top, half - 4, 5.55);
+vbox(L[0].top, half - 4, nm('Große Lage') + ds('top vineyard, like Grand Cru') + `<div style="font:600 20px Inter;color:#E0C78C;margin-top:3px">dry wines: GG</div>`, 5.6, { border: `3px solid ${C.boxGold}` });
+const nu = div({ left: BX + 'px', top: L[4].top + 'px', width: (1050 - BX) + 'px', height: (L[5].bot - L[4].top) + 'px', border: `2px dashed ${C.dash}`, borderRadius: '9px',
+  boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'center', font: '400 23px Inter', color: '#6A5C4A' }, 'not used by VDP members');
+fadeIn(nu, 6.2, 0.45, 0);
+
+fadeIn(text(VX, 1345, VW, 'THE VDP ADDS', T.eyebrow), 7.0);
+fadeIn(text(VX, 1385, VW, 'hand harvest and lower<br>yields at the top<br>GG: dry, at least Spätlese<br>ripeness, released later', LN), 7.1);
+fadeIn(text(540, 1580, 1000, 'VDP wines are still Qualitätswein or Prädikatswein by law,<br>just made under stricter rules', Object.assign({}, T.ital, { font: 'italic 400 34px PFI' })), 7.5);
+render(0);
+</script></body></html>

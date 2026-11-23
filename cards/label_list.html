@@ -1,0 +1,30 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:#EEE5D4}
+#stage{position:relative;width:1080px;height:940px;overflow:hidden;background:#EEE5D4}
+.it{position:absolute;left:0;width:1080px;height:120px}
+.n{position:absolute;left:96px;top:6px;width:46px;height:46px;border-radius:50%;background:#B5905A;color:#FFF8EE;font:600 25px Inter;display:flex;align-items:center;justify-content:center}
+.t{position:absolute;left:166px;top:-6px;font:700 50px PF;color:#211709;white-space:nowrap}
+.d{position:absolute;left:166px;top:62px;font:400 28px Inter;color:#625743;white-space:nowrap}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+// list half of the vertical wine-label layout; item k appears at the start of step k (2.5s each)
+const ITEMS = [
+  ['Anbaugebiet', "Wine region: Saale-Unstrut, one of Germany's 13"],
+  ['Rebsorte', 'Grape variety: Weißburgunder (Pinot Blanc)'],
+  ['Lage', 'Vineyard: the Himmelshöhe site at Seeburg'],
+  ['Geschmack', 'Taste: trocken means dry'],
+  ['Jahrgang', 'Vintage: the grapes were picked in 2024'],
+  ['Erzeuger', "Producer: a growers' cooperative in Freyburg"]];
+ITEMS.forEach(([t, d], k) => {
+  const el = div({ top: (40 + k * 140) + 'px' }, `<div class="n">${k + 1}</div><div class="t">${t}</div><div class="d">${d}</div>`);
+  el.className = 'it';
+  const a = 2.5 * k;
+  anims.push(tt => { const e = eout(seg(tt, a, a + 0.37)); el.style.opacity = e; el.style.translate = `${16 * (1 - e)}px 0`; });
+});
+render(0);
+</script></body></html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="../fonts/fonts.css">
+<style>
+html,body{margin:0;background:#EEE5D4}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden;background:#EEE5D4}
+</style></head>
+<body><div id="stage"></div>
+<script src="lib.js"></script>
+<script>
+// Stacked France / Germany 1971 build (matches the existing 9x16 video), then a morph
+// into the side-by-side layout that systems_squeeze opens on.
+window.build = function () {
+const LX = 275, RX = 805, W = 480, LN = Object.assign({}, T.note, { font: '400 22px Inter' });
+const lerp = (a, b, k) => a + (b - a) * k;
+const M0 = 8.0, M1 = 9.5, kx = t => ease(seg(t, 8.0, 8.8)), ky = t => ease(seg(t, 8.65, 9.5)), xf = t => seg(t, 8.45, 8.7);
+const cv = document.createElement('canvas').getContext('2d');
+const plain = s => s.replace(/<br>/g, ' ');
+
+// size a single line so its ink width hits w, and put its ink top at inkTop
+function ink(str, fam, cx, inkTop, w) {
+  cv.font = `${fam.replace('{s}', 100)}`; const m = cv.measureText(str), size = 100 * w / (m.actualBoundingBoxRight + m.actualBoundingBoxLeft);
+  cv.font = fam.replace('{s}', size); const n = cv.measureText(str);
+  const base = (size - (n.fontBoundingBoxAscent + n.fontBoundingBoxDescent)) / 2 + n.fontBoundingBoxAscent;
+  const d = div({ left: (cx - 540) + 'px', top: (inkTop - (base - n.actualBoundingBoxAscent)) + 'px', width: '1080px', textAlign: 'center', whiteSpace: 'nowrap', font: fam.replace('{s}', size), lineHeight: size + 'px' }, str);
+  d._size = size; return d;
+}
+const F = { title: '700 {s}px PF', sub: '400 {s}px Inter', eyebrow: '600 {s}px Inter', note: '400 {s}px Inter', ital: 'italic 400 {s}px PFI' };
+const col = { title: C.ink, sub: C.sub, eyebrow: C.gold, note: C.ink, ital: C.ink };
+
+// a text item: stacked lines A (each [str, kind, inkTop, width]) -> column block B
+function item(linesA, B, inT, outT) {
+  const As = linesA.map(([s, k, y, w]) => { const d = ink(s, F[k], 540, y, w); d.style.color = col[k]; if (k === 'eyebrow') d.style.letterSpacing = (d._size * 0.22) + 'px'; return d; });
+  if (B) {
+    const b = text(B.cx, B.y, B.w, B.html, B.style);
+    const ra = As.map(a => a.getBoundingClientRect()), rb = b.getBoundingClientRect();
+    const ay = (Math.min(...ra.map(r => r.top)) + Math.max(...ra.map(r => r.bottom))) / 2, by = (rb.top + rb.bottom) / 2;
+    const dx = B.cx - 540, dy = by - ay, s = parseFloat(getComputedStyle(b).fontSize) / As[0]._size;
+    As.forEach(a => a.style.transformOrigin = `540px ${ay - parseFloat(a.style.top)}px`);
+    b.style.transformOrigin = `${B.w / 2}px ${by - rb.top}px`;
+    anims.push(t => { const x = kx(t), y = ky(t), c = xf(t);
+      As.forEach(a => { a.style.transform = `translate(${dx * x}px, ${dy * y}px) scale(${lerp(1, s, x)})`; });
+      b.style.transform = `translate(${-dx * (1 - x)}px, ${-dy * (1 - y)}px) scale(${lerp(1 / s, 1, x)})`; b.style.opacity = c; });
+    anims.push(t => { const k = eout(seg(t, inT, inT + 0.45)); As.forEach(a => { a.style.opacity = k * (1 - xf(t)); a.style.translate = `0 ${14 * (1 - k)}px`; }); });
+  } else anims.push(t => { const k = eout(seg(t, inT, inT + 0.45)); As.forEach(a => { a.style.opacity = k; a.style.translate = `0 ${14 * (1 - k)}px`; }); });
+}
+
+// ---- dividers ----
+const hd = div({ left: '140px', top: '791px', width: '760px', height: '2px', background: C.divider });
+const vd = div({ left: '539px', top: '190px', width: '2px', height: '1540px', background: C.divider });
+anims.push(t => { hd.style.opacity = 1 - seg(t, M0, M0 + 0.3); vd.style.opacity = seg(t, M1 - 0.35, M1); });
+
+// ---- France ----
+item([['France', 'title', 98, 192]], { cx: LX, y: 190, w: W, html: 'France', style: T.title }, 0.25);
+item([['Ranked by place, with rules on how it is made', 'sub', 167, 577]], { cx: LX, y: 296, w: W, html: 'Ranked by place, with rules<br>on how it is made', style: T.sub }, 0.35);
+item([['BURGUNDY EXAMPLE', 'eyebrow', 216, 236]], { cx: LX, y: 410, w: W, html: 'BURGUNDY EXAMPLE', style: T.eyebrow }, 0.45);
+item([['EACH LEVEL IS ITS OWN AOP', 'eyebrow', 649, 313]], { cx: LX, y: 1372, w: W, html: 'EACH LEVEL IS ITS OWN AOP', style: T.eyebrow }, 2.8);
+item([['stricter yields and ripeness at every step up', 'note', 677, 453], ['plus grape varieties · vine density · pruning · ageing', 'note', 707, 534]],
+  { cx: LX, y: 1412, w: W, html: 'stricter yields and ripeness at every step up<br>plus grape varieties · vine density<br>pruning · ageing', style: LN }, 2.9);
+item([['The land is ranked: a Grand Cru site is fixed', 'ital', 747, 546]], { cx: LX, y: 1590, w: W, html: 'The land is ranked:<br>a Grand Cru site is fixed', style: T.ital }, 3.3);
+
+// ---- Germany 1971 ----
+item([['Germany', 'title', 812, 258]], { cx: RX, y: 190, w: W, html: 'Germany', style: T.title }, 4.6);
+item([['Ranked by how ripe the grapes were', 'sub', 882, 463]], { cx: RX, y: 296, w: W, html: 'Ranked by how ripe<br>the grapes were', style: T.sub }, 4.7);
+item([['1971 WINE LAW', 'eyebrow', 931, 170]], { cx: RX, y: 410, w: W, html: '1971 WINE LAW', style: T.eyebrow }, 4.8);
+item([['THE 1971 LAW ALSO SET', 'eyebrow', 1262, 262]], { cx: RX, y: 1372, w: W, html: 'THE 1971 LAW ALSO SET', style: T.eyebrow }, 6.8);
+item([['approved grape varieties · minimum must weight', 'note', 1290, 505], ['official test number (A.P.-Nr.) for each wine', 'note', 1319, 450]],
+  { cx: RX, y: 1412, w: W, html: 'approved grape varieties<br>minimum must weight<br>official test number (A.P.-Nr.)<br>for each wine', style: LN }, 6.9);
+item([['The harvest is ranked: any site can reach the top', 'ital', 1360, 592]], { cx: RX, y: 1590, w: W, html: 'The harvest is ranked:<br>any site can reach the top', style: T.ital }, 7.3);
+
+// ---- pyramids: build up, then morph geometry into the column layout ----
+function geom(cx, y0, y1, wt, wb, n, gap) {
+  const h = ((y1 - y0) - gap * (n - 1)) / n, half = y => (wt + (wb - wt) * (y - y0) / (y1 - y0)) / 2;
+  return Array.from({ length: n }, (_, i) => { const y = y0 + i * (h + gap); return { cx, y, h, ht: half(y), hb: half(y + h) }; });
+}
+function fit(str, fam, w) { cv.font = fam.replace('{s}', 100); const m = cv.measureText(str); return 100 * w / (m.actualBoundingBoxRight + m.actualBoundingBoxLeft); }
+function morphPyr(layers, A, B, fa, fb, start, step) {
+  layers.forEach((l, i) => {
+    const d = div({ background: l.color, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' });
+    const fg = l.light ? C.cream : C.ink;
+    const nm = div({ position: 'static', font: `700 ${fa[0]}px PF`, color: fg, lineHeight: '1.1' }, l.name, d);
+    const sb = div({ position: 'static', font: `400 ${fa[1]}px Inter`, color: fg, opacity: l.light ? .85 : .8 }, l.sub, d);
+    const a = A[i], b = B[i], s0 = start + (layers.length - 1 - i) * step;
+    anims.push(t => {
+      const k = kx(t), q = ky(t), cx = lerp(a.cx, b.cx, k), y = lerp(a.y, b.y, q), h = lerp(a.h, b.h, q), ht = lerp(a.ht, b.ht, k), hb = lerp(a.hb, b.hb, k);
+      Object.assign(d.style, { left: (cx - hb) + 'px', top: y + 'px', width: 2 * hb + 'px', height: h + 'px', clipPath: `polygon(${hb - ht}px 0, ${hb + ht}px 0, ${2 * hb}px 100%, 0 100%)` });
+      nm.style.fontSize = lerp(fa[0], fb[0], k) + 'px'; sb.style.fontSize = lerp(fa[1], fb[1], k) + 'px'; sb.style.marginTop = lerp(0, 4, k) + 'px';
+      const e = eout(seg(t, s0, s0 + 0.42)); d.style.opacity = e; d.style.translate = `0 ${-26 * (1 - e)}px`;
+    });
+  });
+}
+const FR = [
+  { name: 'Grand Cru', sub: 'e.g. Chambertin', color: '#6B2636', light: 1 },
+  { name: 'Premier Cru', sub: 'named vineyards', color: '#823D3E', light: 1 },
+  { name: 'Village', sub: 'e.g. Gevrey-Chambertin', color: '#A0615D', light: 1 },
+  { name: 'AOP', sub: 'region · e.g. Bourgogne', color: '#BC8A84' },
+  { name: 'IGP', sub: 'country wine', color: '#D5B4AD' },
+  { name: 'Vin de France', sub: 'table wine', color: '#E6D1CD' }];
+morphPyr(FR, geom(540, 253, 619, 270, 756, 6, 5), geom(LX, 480, 1320, 250, 490, 6, 7),
+  [fit('Vin de France', F.title, 169), fit('table wine', F.note, 82)], [34, 21], 0.95, 0.27);
+const G71 = [
+  { name: 'Prädikatswein', sub: 'Kabinett to TBA', color: '#9E773A', light: 1 },
+  { name: 'Qualitätswein', sub: 'from one of 13 regions', color: '#CDA767' },
+  { name: 'Landwein', sub: 'country wine', color: '#E0C895' },
+  { name: 'Deutscher Tafelwein', sub: 'table wine', color: '#EFE1C6' }];
+morphPyr(G71, geom(540, 968, 1233, 386, 759, 4, 5), geom(RX, 480, 1320, 250, 490, 4, 7),
+  [fit('Deutscher Tafelwein', F.title, 299), fit('table wine', F.note, 92)], [36, 21], 5.2, 0.33);
+render(0);
+};
+document.fonts.ready.then(() => Promise.all(['700 50px PF', 'italic 400 50px PFI', '400 20px Inter', '600 20px Inter'].map(f => document.fonts.load(f)))).then(() => { build(); window.ready = true; });
+</script></body></html>
