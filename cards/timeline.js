@@ -14,8 +14,8 @@ fadeIn(text(CX, ty + (WIDE ? 48 : 56), HW, WIDE ? 'The monks got here first' : '
   Object.assign({}, T.title, { font: `700 ${WIDE ? 96 : 104}px PF` }), all), 0.15);
 
 // ---- line ----
-// 16:9: y 560, x 140 -> 600 at the start, -> 1120 at 9.6 s. 9:16: x 200, y 650 -> 880, -> 1240.
-const L = WIDE ? { at: 560, a: 140, b1: 600, b2: 1120, th: 4 } : { at: 200, a: 650, b1: 880, b2: 1240, th: 4 };
+// 16:9: y 600, centred on the frame: x 400 -> 960 at the start, -> 1520 at 9.6 s. 9:16: x 200, y 650 -> 880, -> 1240.
+const L = WIDE ? { at: 600, a: 400, b1: 960, b2: 1520, th: 4 } : { at: 200, a: 650, b1: 880, b2: 1240, th: 4 };
 const line = div({ background: C.gold, borderRadius: '2px' }, '', all);
 anims.push(t => {
   const len = (L.b1 - L.a) * eout(seg(t, 0, 0.8)) + (L.b2 - L.b1) * ease(seg(t, EXT, EXT + 0.6));
@@ -27,8 +27,8 @@ anims.push(t => {
 
 // ---- points ----
 const PTS = [
-  { year: '998', strong: 'First record of wine', body: 'Emperor Otto III gives vineyards to the monastery at Memleben', at: WIDE ? 420 : 730, a: 0.6 },
-  { year: '1130s', strong: '', body: 'Cistercian monks found Kloster Pforta, near Naumburg', at: WIDE ? 940 : 1090, a: EXT + 0.35 },
+  { year: '998', strong: 'First record of wine', body: 'Emperor Otto III gives vineyards to the monastery at Memleben', at: WIDE ? 680 : 730, a: 0.6 },
+  { year: '1130s', strong: '', body: 'Cistercian monks found Kloster Pforta, near Naumburg', at: WIDE ? 1240 : 1090, a: EXT + 0.35 },
 ];
 PTS.forEach((p, i) => {
   const g = div({ left: 0, top: 0 }, '', all);   // group, so the first point can dim when the second arrives
