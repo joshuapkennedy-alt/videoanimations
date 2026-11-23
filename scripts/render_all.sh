@@ -29,6 +29,16 @@ wide node render.js cards/area_wide.html 21.5 out/vineyard_area_then_and_now_16x
 # Into East Germany: the region map with the inner-German border (8 s)
 node render.js cards/gdr.html 8 out/saale_unstrut_east_germany_9x16_4K.mp4 out/saale_unstrut_east_germany_9x16_endframe.png
 wide node render.js cards/gdr_wide.html 8 out/saale_unstrut_east_germany_16x9_4K.mp4 out/saale_unstrut_east_germany_16x9_endframe.png
+# East Germany (GDR) map, 1949-1990 border (7.5 s); end frames are taken before the closing fade
+node render.js cards/gdrmap.html 7.5 out/east_germany_gdr_map_9x16_4K.mp4
+wide node render.js cards/gdrmap_wide.html 7.5 out/east_germany_gdr_map_16x9_4K.mp4
+# Transparent overlays, ProRes 4444 with alpha at 1080p: Bückware title and lower thirds A-D
+ALPHA=1 DPR=1 node render.js cards/bueck.html 9 out/buckware_title_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/bueck_wide.html 9 out/buckware_title_16x9.mov
+for x in "a 9 winzervereinigung_freyburg" "b 5 rotkaeppchen" "c 8 bought_by_its_own_managers" "d 7 vineyard_area_1990_2025"; do set -- $x
+  ALPHA=1 DPR=1 node render.js cards/lower_$1.html $2 out/lower_third_$1_$3_9x16.mov
+  ALPHA=1 DPR=1 wide node render.js cards/lower_$1_wide.html $2 out/lower_third_$1_$3_16x9.mov
+done
 # Muschelkalk (13 s, 4 steps)
 node render.js cards/muschel.html 13 out/muschelkalk_9x16_4K.mp4 out/muschelkalk_9x16_endframe.png
 wide node render.js cards/muschel_wide.html 13 out/muschelkalk_16x9_4K.mp4 out/muschelkalk_16x9_endframe.png

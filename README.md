@@ -43,6 +43,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | Where it started (timeline) | `cards/timeline.html` | `cards/timeline_wide.html` | 14 s (420 frames) |
 | Then and now (vineyard area) | `cards/area.html` | `cards/area_wide.html` | 21.5 s (645 frames) |
 | Into East Germany (map with the inner-German border) | `cards/gdr.html` | `cards/gdr_wide.html` | 8 s (240 frames) |
+| East Germany (GDR), 1949–1990 border with West Berlin | `cards/gdrmap.html` | `cards/gdrmap_wide.html` | 7.5 s (225 frames) |
 
 Examples:
 
@@ -56,6 +57,8 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 ## Transparent overlays
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
+
+The "Bückware" title (`cards/bueck*.html`, 9 s) and the four lower thirds (`cards/lower_{a,b,c,d}*.html`, 9 / 5 / 8 / 7 s) render the same way. The lower thirds share `cards/lower.js`; each page sets `window.LABEL = { main, sub, dur }`.
 
 ```
 ALPHA=1 DPR=1 VW=1920 VH=1080 node render.js cards/walls_wide.html 6.5 out/why_the_walls_matter_16x9.mov
@@ -98,6 +101,7 @@ Writes `t2.5.png` and so on. `DPR=2` gives 4K output; leave it off for quick 1×
 - `cards/*.js`: one script per card; the `.html` pages set `window.WIDE` (layout) and, for the bar charts, `window.CHART` (the data)
 - `cards/muted.png`, `cards/su_layer.png`, `cards/muted_de.png`: map images for the Saale-Unstrut and 51°N cards
 - `cards/paths.js`: country outlines for the 51°N card, in the same projection as the map images
+- `cards/gdrmap_geo.js`: the 1949–1990 border (with the Elbe at Amt Neuhaus), the GDR area and West Berlin, same projection (made by `tools/map/gdrmap_build.js`, which lists its three source files)
 - `cards/gdr_geo.js`: the inner-German border and the outline of the five eastern states + Berlin, same projection (made by `tools/map/gdr_build.js`)
 - `fonts/`: bundled fonts, `fonts.css` and licences
 - `tools/map/`: how the map assets were made (below)
