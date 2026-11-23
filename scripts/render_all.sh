@@ -26,6 +26,9 @@ node render.js cards/timeline.html 14 out/where_it_started_9x16_4K.mp4
 wide node render.js cards/timeline_wide.html 14 out/where_it_started_16x9_4K.mp4
 node render.js cards/area.html 21.5 out/vineyard_area_then_and_now_9x16_4K.mp4
 wide node render.js cards/area_wide.html 21.5 out/vineyard_area_then_and_now_16x9_4K.mp4
+# Into East Germany: the region map with the inner-German border (8 s)
+node render.js cards/gdr.html 8 out/saale_unstrut_east_germany_9x16_4K.mp4 out/saale_unstrut_east_germany_9x16_endframe.png
+wide node render.js cards/gdr_wide.html 8 out/saale_unstrut_east_germany_16x9_4K.mp4 out/saale_unstrut_east_germany_16x9_endframe.png
 # Muschelkalk (13 s, 4 steps)
 node render.js cards/muschel.html 13 out/muschelkalk_9x16_4K.mp4 out/muschelkalk_9x16_endframe.png
 wide node render.js cards/muschel_wide.html 13 out/muschelkalk_16x9_4K.mp4 out/muschelkalk_16x9_endframe.png

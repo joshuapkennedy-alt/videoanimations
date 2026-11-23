@@ -42,6 +42,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | Why the walls matter (transparent lower third) | `cards/walls.html` | `cards/walls_wide.html` | 6.5 s (195 frames) |
 | Where it started (timeline) | `cards/timeline.html` | `cards/timeline_wide.html` | 14 s (420 frames) |
 | Then and now (vineyard area) | `cards/area.html` | `cards/area_wide.html` | 21.5 s (645 frames) |
+| Into East Germany (map with the inner-German border) | `cards/gdr.html` | `cards/gdr_wide.html` | 8 s (240 frames) |
 
 Examples:
 
@@ -97,6 +98,7 @@ Writes `t2.5.png` and so on. `DPR=2` gives 4K output; leave it off for quick 1×
 - `cards/*.js`: one script per card; the `.html` pages set `window.WIDE` (layout) and, for the bar charts, `window.CHART` (the data)
 - `cards/muted.png`, `cards/su_layer.png`, `cards/muted_de.png`: map images for the Saale-Unstrut and 51°N cards
 - `cards/paths.js`: country outlines for the 51°N card, in the same projection as the map images
+- `cards/gdr_geo.js`: the inner-German border and the outline of the five eastern states + Berlin, same projection (made by `tools/map/gdr_build.js`)
 - `fonts/`: bundled fonts, `fonts.css` and licences
 - `tools/map/`: how the map assets were made (below)
 - `big_picture/`: the big-picture renderers and conversion scripts
@@ -120,6 +122,12 @@ npm install d3-geo@3.1.1 topojson-client@3.1.0 world-atlas@2.0.2
 node cands.mjs cands.json && python3 fit.py ../../cards/muted.png cands.json fit.json   # only to re-fit the projection
 node paths.mjs fit.json ../../cards/paths.js
 python3 build_map_assets.py <rivers_regions_16x9_4K.mp4> ../../cards
+```
+
+The East Germany border (`cards/gdr_geo.js`) comes from the German states file `2_bundeslaender/3_mittel.geo.json` in the `isellsoap/deutschlandGeoJSON` GitHub repo, which is not kept here. The border is every point of an eastern state that lies within about 300 m of a western state's edge, joined north to south. To rebuild:
+
+```
+node tools/map/gdr_build.js <3_mittel.geo.json> tools/map/fit.json cards/gdr_geo.js
 ```
 
 ## Big picture and wine label
