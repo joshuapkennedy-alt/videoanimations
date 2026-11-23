@@ -18,6 +18,9 @@ node render.js cards/saale.html 8 out/saale_unstrut_rivers_9x16_4K.mp4 out/saale
 wide node render.js cards/saale169.html 8 out/saale_unstrut_rivers_16x9_4K.mp4 out/saale_unstrut_rivers_16x9_endframe.png
 node render.js cards/lat51.html 9 out/latitude_51_freyburg_london_9x16_4K.mp4 out/latitude_51_freyburg_london_9x16_endframe.png
 wide node render.js cards/lat51_wide.html 9 out/latitude_51_freyburg_london_16x9_4K.mp4 out/latitude_51_freyburg_london_16x9_endframe.png
+# Why the walls matter: transparent lower third, ProRes 4444 with alpha at 1080p (6.5 s)
+ALPHA=1 DPR=1 wide node render.js cards/walls_wide.html 6.5 out/why_the_walls_matter_16x9.mov
+ALPHA=1 DPR=1 node render.js cards/walls.html 6.5 out/why_the_walls_matter_9x16.mov
 # Muschelkalk (13 s, 4 steps)
 node render.js cards/muschel.html 13 out/muschelkalk_9x16_4K.mp4 out/muschelkalk_9x16_endframe.png
 wide node render.js cards/muschel_wide.html 13 out/muschelkalk_16x9_4K.mp4 out/muschelkalk_16x9_endframe.png

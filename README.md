@@ -39,6 +39,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | Saale-Unstrut rivers (leads into 51°N) | `cards/saale.html` | `cards/saale169.html` | 8 s (240 frames) |
 | 51°N: Freyburg and London | `cards/lat51.html` | `cards/lat51_wide.html` | 9 s (270 frames) |
 | Muschelkalk | `cards/muschel.html` | `cards/muschel_wide.html` | 13 s (390 frames) |
+| Why the walls matter (transparent lower third) | `cards/walls.html` | `cards/walls_wide.html` | 6.5 s (195 frames) |
 
 Examples:
 
@@ -48,6 +49,17 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 ```
 
 `scripts/render_all.sh` renders every card in both formats, including the step clips, into `out/`.
+
+## Transparent overlays
+
+"Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
+
+```
+ALPHA=1 DPR=1 VW=1920 VH=1080 node render.js cards/walls_wide.html 6.5 out/why_the_walls_matter_16x9.mov
+ALPHA=1 DPR=1 node render.js cards/walls.html 6.5 out/why_the_walls_matter_9x16.mov
+```
+
+In 16:9 the group is 1104 px wide, centred, 80 px above the bottom, and the top two-thirds stay empty. In 9:16 everything sits between 25% and 75% of the height and 120+ px clear of the right edge.
 
 ## Step versions
 
