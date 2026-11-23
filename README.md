@@ -40,6 +40,8 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | 51°N: Freyburg and London | `cards/lat51.html` | `cards/lat51_wide.html` | 9 s (270 frames) |
 | Muschelkalk | `cards/muschel.html` | `cards/muschel_wide.html` | 13 s (390 frames) |
 | Why the walls matter (transparent lower third) | `cards/walls.html` | `cards/walls_wide.html` | 6.5 s (195 frames) |
+| Where it started (timeline) | `cards/timeline.html` | `cards/timeline_wide.html` | 14 s (420 frames) |
+| Then and now (vineyard area) | `cards/area.html` | `cards/area_wide.html` | 21.5 s (645 frames) |
 
 Examples:
 
