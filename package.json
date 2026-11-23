@@ -1,0 +1,13 @@
+{
+  "name": "saale-unstrut-infographics",
+  "private": true,
+  "description": "Source for the Saale-Unstrut infographic cards (render with render.js)",
+  "dependencies": {
+    "playwright": "^1.40.0"
+  },
+  "optionalDependencies": {
+    "d3-geo": "3.1.1",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  }
+}
