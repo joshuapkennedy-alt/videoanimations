@@ -44,6 +44,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | Then and now (vineyard area) | `cards/area.html` | `cards/area_wide.html` | 21.5 s (645 frames) |
 | Into East Germany (map with the inner-German border) | `cards/gdr.html` | `cards/gdr_wide.html` | 8 s (240 frames) |
 | East Germany (GDR), 1949–1990 border with West Berlin | `cards/gdrmap.html` | `cards/gdrmap_wide.html` | 7.5 s (225 frames) |
+| How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 
 Examples:
 
@@ -57,6 +58,8 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 ## Transparent overlays
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
+
+Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), and the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s).
 
 The "Bückware" title (`cards/bueck*.html`, 9 s) and the four lower thirds (`cards/lower_{a,b,c,d}*.html`, 9 / 5 / 8 / 7 s) render the same way. The lower thirds share `cards/lower.js`; each page sets `window.LABEL = { main, sub, dur }`.
 
