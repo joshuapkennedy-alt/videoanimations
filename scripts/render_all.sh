@@ -49,6 +49,12 @@ for x in "einzellage 8 overlay_a_einzellage" "vdp 11 overlay_c_vdp" "site_edelac
 done
 ALPHA=1 DPR=1 node render.js cards/keytiles.html 8.5 out/lower_third_name_vdp_rank_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/keytiles_wide.html 8.5 out/lower_third_name_vdp_rank_16x9.mov
+# Freyburg - Werder map (36.2 s); end frames are taken before the closing fade
+node render.js cards/werder.html 36.2 out/freyburg_werder_three_states_9x16_4K.mp4
+wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states_16x9_4K.mp4
+# Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
+ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
 # Muschelkalk (13 s, 4 steps)
 node render.js cards/muschel.html 13 out/muschelkalk_9x16_4K.mp4 out/muschelkalk_9x16_endframe.png
 wide node render.js cards/muschel_wide.html 13 out/muschelkalk_16x9_4K.mp4 out/muschelkalk_16x9_endframe.png

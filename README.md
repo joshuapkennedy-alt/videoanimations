@@ -45,6 +45,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | Into East Germany (map with the inner-German border) | `cards/gdr.html` | `cards/gdr_wide.html` | 8 s (240 frames) |
 | East Germany (GDR), 1949–1990 border with West Berlin | `cards/gdrmap.html` | `cards/gdrmap_wide.html` | 7.5 s (225 frames) |
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
+| Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 
 Examples:
 
@@ -59,7 +60,7 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
 
-Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), and the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s).
+Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s) and the Werderaner Wachtelberg label (`cards/lower_e*.html`, 6 s).
 
 The "Bückware" title (`cards/bueck*.html`, 9 s) and the four lower thirds (`cards/lower_{a,b,c,d}*.html`, 9 / 5 / 8 / 7 s) render the same way. The lower thirds share `cards/lower.js`; each page sets `window.LABEL = { main, sub, dur }`.
 
@@ -104,6 +105,7 @@ Writes `t2.5.png` and so on. `DPR=2` gives 4K output; leave it off for quick 1×
 - `cards/*.js`: one script per card; the `.html` pages set `window.WIDE` (layout) and, for the bar charts, `window.CHART` (the data)
 - `cards/muted.png`, `cards/su_layer.png`, `cards/muted_de.png`: map images for the Saale-Unstrut and 51°N cards
 - `cards/paths.js`: country outlines for the 51°N card, in the same projection as the map images
+- `cards/werder_geo.js`, `cards/regions13.png`, `cards/su_mask.png`: states, key points and region masks for the Freyburg – Werder map (made by `tools/map/werder_build.js`: regions from muted.png, Saale-Unstrut from su_layer.png plus the Werder vineyard, states from the German states file)
 - `cards/gdrmap_geo.js`: the 1949–1990 border (with the Elbe at Amt Neuhaus), the GDR area and West Berlin, same projection (made by `tools/map/gdrmap_build.js`, which lists its three source files)
 - `cards/gdr_geo.js`: the inner-German border and the outline of the five eastern states + Berlin, same projection (made by `tools/map/gdr_build.js`)
 - `fonts/`: bundled fonts, `fonts.css` and licences
