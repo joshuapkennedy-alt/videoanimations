@@ -47,6 +47,9 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 | The co-op: Winzervereinigung Freyburg 1934 / 1951 (timeline.js with `window.TL`) | `cards/coop.html` | `cards/coop_wide.html` | 13.5 s (405 frames) |
+| Climate change: Winner or loser? (no fade-out) | `cards/wol.html` | `cards/wol_wide.html` | 4.8 s (144 frames) |
+| Climate change: The good (rows + harvest calendar; `window.MODE = "good"`) | `cards/climate_good.html` | `cards/climate_good_wide.html` | 17.4 s (522 frames) |
+| Climate change: The bad (rows, −95%, 20 bottles; `window.MODE = "bad"`) | `cards/climate_bad.html` | `cards/climate_bad_wide.html` | 21.4 s (642 frames) |
 | Breitengrad 51: their vineyard sites (map, 13 sites; holds at the end, no fade-out) | `cards/b51_sites.html` | `cards/b51_sites_wide.html` | 16 s (480 frames) |
 | The VDP estates (continues from the sites map’s last frame: list goes, sites dim, 3 pins) | `cards/b51_vdp.html` | `cards/b51_vdp_wide.html` | 9 s (270 frames) |
 | New ideas: the next generation (three tiles; 51°N line across Breitengrad 51) | `cards/newideas.html` | `cards/newideas_wide.html` | 18.5 s (555 frames) |
