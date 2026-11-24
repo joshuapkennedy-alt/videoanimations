@@ -9,12 +9,14 @@ in video pixels. `cards/koeppelberg.js` is the earlier, simpler single-outline v
 |---|---|---|---|
 | Edelacker | `cards/edelacker.html` | `Edelacker.mp4` | 15 s |
 | Steinmeister | `cards/steinmeister.html` | `Steinmaster.mp4` | 15 s |
+| Werderaner Wachtelberg | `cards/wachtelberg.html` | `Werder.mp4` | 15 s (clip held on its last frame from 9 s; outline traced by hand on that frame, no Große Lage) |
 | Köppelberg | `cards/koeppelberg.html` | `Koeppelburg.mp4` | 8 s (clip held on its last frame) |
 
 Render the transparent overlay, then lay it over the clip:
 
 ```
 ALPHA=1 DPR=1 VW=1920 VH=1080 node render.js cards/edelacker.html 15 overlay.mov
+# for Werder.mp4 add tpad=stop_mode=clone:stop_duration=6 to [0:v] to hold its last frame
 ffmpeg -i Edelacker.mp4 -i overlay.mov -filter_complex "[0:v][1:v]overlay=0:0:format=auto,format=yuv420p" -t 15 -c:v libx264 -crf 16 edelacker.mp4
 ```
 
