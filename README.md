@@ -47,6 +47,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 | The co-op: Winzervereinigung Freyburg 1934 / 1951 (timeline.js with `window.TL`) | `cards/coop.html` | `cards/coop_wide.html` | 13.5 s (405 frames) |
+| Old to new: the makers (timeline + four family tiles with empty photo slots; `window.PHOTO_SLOTS` gives their positions) | `cards/makers.html` | `cards/makers_wide.html` | 32.8 s (984 frames) |
 | Winzervereinigung today (~320 growers, ~half the vines) | `cards/members.html` | `cards/members_wide.html` | 5 s (150 frames) |
 | Saale-Unstrut in a box (Vine to Table box #1, three tiles) | `cards/box.html` | `cards/box_wide.html` | 8.3 s (249 frames) |
 | Mostly white (pie, white vs red grapes) | `cards/pie.html` | `cards/pie_wide.html` | 4.5 s (135 frames) |
@@ -65,7 +66,7 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
 
-Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s) the Werderaner Wachtelberg label (`cards/lower_e*.html`, 6 s) the Weißburgunder / Müller-Thurgau bars (`cards/habars*.html`, 7 s) FRESH · LIGHTER · OFTEN DRY (`cards/lower_f*.html`, 6 s; `window.LABEL.words` brings the words in one by one), You grow → the co-op makes (`cards/coopflow*.html`, 8 s) and the Duke’s vineyard tours label (`cards/lower_g*.html`, 8 s).
+Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s) the Werderaner Wachtelberg label (`cards/lower_e*.html`, 6 s) the Weißburgunder / Müller-Thurgau bars (`cards/habars*.html`, 7 s) FRESH · LIGHTER · OFTEN DRY (`cards/lower_f*.html`, 6 s; `window.LABEL.words` brings the words in one by one), You grow → the co-op makes (`cards/coopflow*.html`, 8 s) the Duke’s vineyard tours label (`cards/lower_g*.html`, 8 s), the shorter Winzervereinigung label (`cards/lower_a2*.html`, 9 s) and The next generation (`cards/nextgen*.html`, 18.5 s).
 
 The "Bückware" title (`cards/bueck*.html`, 9 s) and the four lower thirds (`cards/lower_{a,b,c,d}*.html`, 9 / 5 / 8 / 7 s) render the same way. The lower thirds share `cards/lower.js`; each page sets `window.LABEL = { main, sub, dur }`.
 

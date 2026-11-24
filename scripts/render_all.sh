@@ -55,6 +55,14 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Old to new: the makers (32.8 s)
+node render.js cards/makers.html 32.8 out/old_to_new_makers_9x16_4K.mp4
+wide node render.js cards/makers_wide.html 32.8 out/old_to_new_makers_16x9_4K.mp4
+# The next generation and the shorter Winzervereinigung label: transparent ProRes 4444 at 1080p
+ALPHA=1 DPR=1 node render.js cards/nextgen.html 18.5 out/overlay_the_next_generation_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/nextgen_wide.html 18.5 out/overlay_the_next_generation_16x9.mov
+ALPHA=1 DPR=1 node render.js cards/lower_a2.html 9 out/lower_third_a_winzervereinigung_freyburg_cooperative_only_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/lower_a2_wide.html 9 out/lower_third_a_winzervereinigung_freyburg_cooperative_only_16x9.mov
 # The co-op timeline (13.5 s) and Winzervereinigung today (5 s)
 node render.js cards/coop.html 13.5 out/coop_timeline_1934_1951_9x16_4K.mp4
 wide node render.js cards/coop_wide.html 13.5 out/coop_timeline_1934_1951_16x9_4K.mp4
