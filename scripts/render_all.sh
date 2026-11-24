@@ -64,6 +64,9 @@ node render.js cards/climate_bad.html 21.4 out/climate_the_bad_9x16_4K.mp4
 wide node render.js cards/climate_bad_wide.html 21.4 out/climate_the_bad_16x9_4K.mp4
 ALPHA=1 DPR=1 node render.js cards/adapting.html 11 out/lower_third_how_growers_are_adapting_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/adapting_wide.html 11 out/lower_third_how_growers_are_adapting_16x9.mov
+# +1.4 °C warming card: transparent ProRes 4444 at 1080p (3 s, no fade-out)
+ALPHA=1 DPR=1 node render.js cards/warming.html 3 out/overlay_warming_plus_1_4C_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/warming_wide.html 3 out/overlay_warming_plus_1_4C_16x9.mov
 # Saale-Unstrut close-up maps: Breitengrad 51 sites (16 s) and the VDP estates (10 s); see tools/map/b51
 node render.js cards/b51_sites.html 16 out/breitengrad51_sites_map_9x16_4K.mp4
 wide node render.js cards/b51_sites_wide.html 16 out/breitengrad51_sites_map_16x9_4K.mp4
