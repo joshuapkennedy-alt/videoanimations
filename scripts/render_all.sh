@@ -55,6 +55,9 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Saale-Unstrut in a box (8.3 s)
+node render.js cards/box.html 8.3 out/saale_unstrut_in_a_box_9x16_4K.mp4
+wide node render.js cards/box_wide.html 8.3 out/saale_unstrut_in_a_box_16x9_4K.mp4
 # Mostly white pie (4.5 s) and the newsletter end cards (6.3 s, no fade-out)
 node render.js cards/pie.html 4.5 out/mostly_white_pie_9x16_4K.mp4
 wide node render.js cards/pie_wide.html 4.5 out/mostly_white_pie_16x9_4K.mp4

@@ -46,6 +46,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | East Germany (GDR), 1949–1990 border with West Berlin | `cards/gdrmap.html` | `cards/gdrmap_wide.html` | 7.5 s (225 frames) |
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
+| Saale-Unstrut in a box (Vine to Table box #1, three tiles) | `cards/box.html` | `cards/box_wide.html` | 8.3 s (249 frames) |
 | Mostly white (pie, white vs red grapes) | `cards/pie.html` | `cards/pie_wide.html` | 4.5 s (135 frames) |
 | Newsletter end card (A: 16:9 /yt, B: 9:16 /yt, C: 9:16 /ig + "link in bio", D: 16:9 /ig; no fade-out) | `cards/endcard_b.html`, `cards/endcard_c.html` | `cards/endcard_a_wide.html`, `cards/endcard_d_wide.html` | 6.3 s (189 frames) |
 
