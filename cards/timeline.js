@@ -1,17 +1,21 @@
-// "Where it started": timeline card, 14 s. 16:9 runs left to right; 9:16 (window.WIDE false) runs top to bottom.
-// Space after the second point is left empty for later dates.
+// Two-point timeline card. 16:9 runs left to right; 9:16 (window.WIDE false) runs top to bottom.
+// Content and timing come from window.TL (optional); without it this is "Where it started" (the monks, 14 s).
+//   TL = { head, title, titleTall, tallSize, labelW (16:9 label width), points: [{ year, strong, body }], a1, EXT, END }
 const WIDE = !!window.WIDE, SW = WIDE ? 1920 : 1080, SH = WIDE ? 1080 : 1920;
 stage.style.width = SW + 'px'; stage.style.height = SH + 'px';
-const BURG = '#6B2737', OUT = 13.6, END = 14.0, EXT = 9.6;
+const TL = Object.assign({ head: 'WHERE IT STARTED', title: 'The monks got here first', titleTall: 'The monks<br>got here first', tallSize: 104, labelW: 440, a1: 0.6, EXT: 9.6, END: 14.0,
+  points: [{ year: '998', strong: 'First record of wine', body: 'Emperor Otto III gives vineyards to the monastery at Memleben' },
+           { year: '1130s', strong: '', body: 'Cistercian monks found Kloster Pforta, near Naumburg' }] }, window.TL || {});
+const BURG = '#6B2737', END = TL.END, OUT = END - 0.4, EXT = TL.EXT;
 const all = div({ left: 0, top: 0, width: SW + 'px', height: SH + 'px' });   // wrapper for the closing fade
 const backOut = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 
 // ---- header ----
 // 9:16: centre of the x 60-960 column (120 px clear on the right), everything between 15% and 75% of the height
 const ty = WIDE ? 80 : 300, CX = WIDE ? SW / 2 : 510, HW = WIDE ? SW - 80 : 900;
-fadeIn(text(CX, ty, HW, 'WHERE IT STARTED', Object.assign({}, T.eyebrow, { font: `600 ${WIDE ? 26 : 30}px Inter`, letterSpacing: '7px' }), all), 0);
-fadeIn(text(CX, ty + (WIDE ? 48 : 56), HW, WIDE ? 'The monks got here first' : 'The monks<br>got here first',
-  Object.assign({}, T.title, { font: `700 ${WIDE ? 96 : 104}px PF` }), all), 0.15);
+fadeIn(text(CX, ty, HW, TL.head, Object.assign({}, T.eyebrow, { font: `600 ${WIDE ? 26 : 30}px Inter`, letterSpacing: '7px' }), all), 0);
+fadeIn(text(CX, ty + (WIDE ? 48 : 56), HW, WIDE ? TL.title : TL.titleTall,
+  Object.assign({}, T.title, { font: `700 ${WIDE ? 96 : TL.tallSize}px PF` }), all), 0.15);
 
 // ---- line ----
 // 16:9: y 600, centred on the frame: x 400 -> 960 at the start, -> 1520 at 9.6 s. 9:16: x 200, y 650 -> 880, -> 1240.
@@ -26,10 +30,7 @@ anims.push(t => {
 });
 
 // ---- points ----
-const PTS = [
-  { year: '998', strong: 'First record of wine', body: 'Emperor Otto III gives vineyards to the monastery at Memleben', at: WIDE ? 680 : 730, a: 0.6 },
-  { year: '1130s', strong: '', body: 'Cistercian monks found Kloster Pforta, near Naumburg', at: WIDE ? 1240 : 1090, a: EXT + 0.35 },
-];
+const PTS = TL.points.map((p, i) => Object.assign({}, p, { at: WIDE ? [680, 1240][i] : [730, 1090][i], a: i ? EXT + 0.35 : TL.a1 }));
 PTS.forEach((p, i) => {
   const g = div({ left: 0, top: 0 }, '', all);   // group, so the first point can dim when the second arrives
   const x = WIDE ? p.at : L.at, y = WIDE ? L.at : p.at, D = WIDE ? 30 : 34;
@@ -40,7 +41,7 @@ PTS.forEach((p, i) => {
     : div({ left: (x + 52) + 'px', top: (y - 52) + 'px', font: '700 100px PF', color: C.ink, lineHeight: '1', fontVariantNumeric: 'lining-nums' }, p.year, g);
   const html = (p.strong ? `<div style="font-weight:600;color:${C.ink};margin-bottom:6px">${p.strong}</div>` : '') + p.body;
   const lab = WIDE
-    ? text(x, y + 44, 440, html, { font: '400 27px Inter', color: C.sub, lineHeight: '1.35' }, g)
+    ? text(x, y + 44, TL.labelW, html, { font: '400 27px Inter', color: C.sub, lineHeight: '1.35' }, g)
     : div({ left: (x + 52) + 'px', top: (y + 66) + 'px', width: (960 - x - 52) + 'px', font: '400 32px Inter', color: C.sub, lineHeight: '1.35' }, html, g);
   anims.push(t => {
     const r = seg(t, p.a, p.a + 0.45); dot.style.transform = `scale(${r > 0 ? backOut(r) : 0})`;

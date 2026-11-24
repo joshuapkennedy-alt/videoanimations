@@ -55,6 +55,16 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# The co-op timeline (13.5 s) and Winzervereinigung today (5 s)
+node render.js cards/coop.html 13.5 out/coop_timeline_1934_1951_9x16_4K.mp4
+wide node render.js cards/coop_wide.html 13.5 out/coop_timeline_1934_1951_16x9_4K.mp4
+node render.js cards/members.html 5 out/winzervereinigung_today_9x16_4K.mp4
+wide node render.js cards/members_wide.html 5 out/winzervereinigung_today_16x9_4K.mp4
+# You grow -> the co-op makes, and the tours label: transparent ProRes 4444 at 1080p (8 s each)
+ALPHA=1 DPR=1 node render.js cards/coopflow.html 8 out/lower_third_you_grow_coop_makes_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/coopflow_wide.html 8 out/lower_third_you_grow_coop_makes_16x9.mov
+ALPHA=1 DPR=1 node render.js cards/lower_g.html 8 out/lower_third_tours_dukes_vineyard_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/lower_g_wide.html 8 out/lower_third_tours_dukes_vineyard_16x9.mov
 # Saale-Unstrut in a box (8.3 s)
 node render.js cards/box.html 8.3 out/saale_unstrut_in_a_box_9x16_4K.mp4
 wide node render.js cards/box_wide.html 8.3 out/saale_unstrut_in_a_box_16x9_4K.mp4
