@@ -1,6 +1,6 @@
 // Climate change, "The good" / "The bad": header and title top-left, four icon rows on the left, a graphic on the right.
 //   window.MODE = 'good' (olive): harvest calendar, "usual start" and "2026: ~1 week early" markers. 17.4 s.
-//   window.MODE = 'bad' (burgundy): April 2024 frost, a count to -95%, and 20 bottles of which 19 go. 21.4 s.
+//   window.MODE = 'bad' (burgundy): April 2024 frost, about two-thirds of the harvest lost (-⅔), 3 bottles of which 2 go. 21.4 s.
 // 16:9: rows left, graphic right. 9:16: rows above the calendar (good) / number and bottles above the rows (bad),
 // everything between 15% and 75% of the height and 120+ px clear of the right edge.
 const WIDE = !!window.WIDE, SW = WIDE ? 1920 : 1080, SH = WIDE ? 1080 : 1920, MODE = window.MODE || 'good';
@@ -45,10 +45,10 @@ const ROWS = MODE === 'good' ? [
 ] : [
   { icon: 'bud', line: 'Warm springs wake the vines early', a: 1.25 },
   { icon: 'snow', line: 'Then a late frost hits the young shoots', a: 3.6 },
-  { icon: 'sundrop', line: 'Dry summers', a: 15.2 },
-  { icon: 'chart', line: '4 poor harvests since 2018', a: 16.7 },
+  { icon: 'sundrop', line: 'Dry summers', a: 14.55 },
+  { icon: 'chart', line: '4 poor harvests since 2018', a: 17.6 },
 ];
-const R = WIDE ? { x: HX, y0: 300, step: 158, icon: 84, size: MODE === 'bad' ? 38 : 40 } : (MODE === 'good' ? { x: HX, y0: 478, step: 112, icon: 76, size: 36 } : { x: HX, y0: 950, step: 118, icon: 76, size: 36 });
+const R = WIDE ? { x: HX, y0: 300, step: 158, icon: 84, size: MODE === 'bad' ? 38 : 40 } : (MODE === 'good' ? { x: HX, y0: 478, step: 112, icon: 76, size: 36 } : { x: HX, y0: 1000, step: 108, icon: 76, size: 36 });
 ROWS.forEach((r, i) => {
   const row = div({ left: R.x + 'px', top: (R.y0 + i * R.step) + 'px', width: (WIDE ? 880 : 900 - R.x + 60) + 'px', display: 'flex', alignItems: 'center', gap: (WIDE ? 26 : 22) + 'px' }, '', all);
   const b = badge(row, R.icon, r.icon);
@@ -93,28 +93,36 @@ if (MODE === 'good') {
     const e = eout(seg(t, 12.7, 13.3)), mv = ease(seg(t, 12.9, 13.8)); early.style.opacity = e; early.style.left = (cell(USUAL) - (G.cw + G.gap) * mv) + 'px';
   });
 } else {
-  // April 2024 frost: count to -95%, then 20 bottles, 19 of which fade and go
-  const B = WIDE ? { cx: 1440, lab: 300, num: 342, numS: 200, lab2: 570, by: 680, bw: 30, bh: 72, bg: 10, cap: 780 }
-                 : { cx: 510, lab: 470, num: 506, numS: 190, lab2: 726, by: 790, bw: 30, bh: 70, bg: 12, cap: 880 };
-  const l1 = text(B.cx, B.lab, 800, 'April 2024 frost', { font: `600 ${WIDE ? 30 : 30}px Inter`, letterSpacing: '2px', color: C.ink });
-  const num = text(B.cx, B.num, 900, '0%', { font: `700 ${B.numS}px PF`, color: BURG, lineHeight: '1', fontVariantNumeric: 'lining-nums' });
-  const l2 = text(B.cx, B.lab2, 800, 'of the region’s harvest', { font: `400 ${WIDE ? 30 : 30}px Inter`, color: C.ink });
-  [l1, num, l2].forEach(e => all.appendChild(e));
+  // April 2024 frost: the number steps 0 -> -⅓ -> -½ -> -⅔ (Playfair has these fraction glyphs), then 3 bottles, 2 of which fade and go.
+  // Cues set to the voice-over: label 6.25 s, count to -⅔ from 8.15 s landing 9.4 s, bottles 10.1 s, "Two bottles out of three" 11.5 s, "Gone" 13.5 s.
+  const FADE_AT = 11.5, GONE_AT = 13.5, COUNT = [8.15, 9.4], BOTTLES = 10.1;
+  const B = WIDE ? { cx: 1440, lab: 290, num: 332, numS: 210, lab2: 568, src: 612, by: 668, bw: 64, bh: 154, bg: 46, cap: 838 }
+                 : { cx: 510, lab: 470, num: 506, numS: 200, lab2: 732, src: 772, by: 818, bw: 46, bh: 110, bg: 34, cap: 940 };
+  const l1 = text(B.cx, B.lab, 800, 'April 2024 frost', { font: `600 30px Inter`, letterSpacing: '2px', color: C.ink });
+  const num = text(B.cx, B.num, 900, '0', { font: `700 ${B.numS}px PF`, color: BURG, lineHeight: '1', fontVariantNumeric: 'lining-nums' });
+  const l2 = text(B.cx, B.lab2, 800, 'of the region’s harvest', { font: `400 30px Inter`, color: C.ink });
+  const src = text(B.cx, B.src, 800, 'Source: Destatis', { font: `400 ${WIDE ? 20 : 21}px Inter`, color: 'rgba(40, 29, 22, 0.6)', letterSpacing: '0.5px' });
+  [l1, num, l2, src].forEach(e => all.appendChild(e));
   const bottlePath = 'M12 0H18V16C18 20 25 22 25 30V70H5V30C5 22 12 20 12 16Z';
-  const rowW = 20 * B.bw + 19 * B.bg, x0 = B.cx - rowW / 2;
-  const bottles = Array.from({ length: 20 }, (_, i) => { const s = document.createElementNS(NS, 'svg');
+  const rowW = 3 * B.bw + 2 * B.bg, x0 = B.cx - rowW / 2;
+  const bottles = Array.from({ length: 3 }, (_, i) => { const s = document.createElementNS(NS, 'svg');
     s.setAttribute('width', B.bw); s.setAttribute('height', B.bh); s.setAttribute('viewBox', '0 0 30 72'); s.style.position = 'absolute'; s.style.left = (x0 + i * (B.bw + B.bg)) + 'px'; s.style.top = B.by + 'px';
     s.innerHTML = `<path d="${bottlePath}" fill="${C.ink}"/><rect x="5" y="40" width="20" height="14" fill="#EEE5D4" opacity=".55"/>`; all.appendChild(s); return s; });
-  const KEEP = 19;   // the one bottle left
-  const cap = text(B.cx, B.cap, 800, '19 bottles out of 20', { font: `500 ${WIDE ? 28 : 28}px Inter`, color: C.ink }); all.appendChild(cap);
+  const KEEP = 2;   // the one bottle left
+  const cap = text(B.cx, B.cap, 800, '2 bottles out of 3', { font: `500 28px Inter`, color: C.ink }); all.appendChild(cap);
+  let shown = '';
   anims.push(t => {
-    const a = eout(seg(t, 6.15, 6.65)); l1.style.opacity = a; num.style.opacity = a; num.style.translate = l1.style.translate = `0 ${12 * (1 - a)}px`;
-    const v = Math.round(95 * ease(seg(t, 6.3, 8.6))); num.textContent = v ? `−${v}%` : '0%';
-    const b = eout(seg(t, 6.6, 7.1)); l2.style.opacity = b; l2.style.translate = `0 ${10 * (1 - b)}px`;
-    const fade = ease(seg(t, 11.9, 12.6)), gone = ease(seg(t, 13.85, 14.4));
-    bottles.forEach((s, i) => { const k = eout(seg(t, 9.5 + i * 0.04, 9.9 + i * 0.04));
-      const o = i === KEEP ? k : k * (1 - 0.85 * fade) * (1 - gone); s.style.opacity = o; s.style.translate = `0 ${10 * (1 - k)}px`; });
-    const c = eout(seg(t, 11.9, 12.4)); cap.style.opacity = c; cap.style.translate = `0 ${10 * (1 - c)}px`;
+    const a = eout(seg(t, 6.25, 6.75)); l1.style.opacity = a; num.style.opacity = a; num.style.translate = l1.style.translate = `0 ${12 * (1 - a)}px`;
+    // even steps: -⅓ at COUNT[0], -½ halfway, landing on -⅔ at COUNT[1]; each step pops a little
+    const k = t < COUNT[0] ? 0 : Math.min(3, 1 + Math.floor(seg(t, COUNT[0], COUNT[1]) * 2 + 1e-6)), label = ['0', '−⅓', '−½', '−⅔'][k];
+    if (label !== shown) { shown = label; num.textContent = shown; }
+    const tStep = COUNT[0] + (k - 1) * (COUNT[1] - COUNT[0]) / 2, pop = seg(t, tStep, tStep + 0.25);
+    num.style.transform = `scale(${k ? 1 + 0.07 * Math.sin(Math.PI * pop) : 1})`;
+    const b = eout(seg(t, 6.7, 7.2)); l2.style.opacity = b; l2.style.translate = `0 ${10 * (1 - b)}px`; src.style.opacity = eout(seg(t, 7.1, 7.6));
+    const fade = ease(seg(t, FADE_AT, FADE_AT + 0.7)), gone = ease(seg(t, GONE_AT, GONE_AT + 0.55));
+    bottles.forEach((s, i) => { const k = eout(seg(t, BOTTLES + i * 0.12, BOTTLES + 0.45 + i * 0.12));
+      const o = i === KEEP ? k : k * (1 - 0.85 * fade) * (1 - gone); s.style.opacity = o; s.style.translate = `0 ${12 * (1 - k)}px`; });
+    const c = eout(seg(t, FADE_AT, FADE_AT + 0.5)); cap.style.opacity = c; cap.style.translate = `0 ${10 * (1 - c)}px`;
   });
 }
 anims.push(t => { all.style.opacity = 1 - ease(seg(t, END - 0.4, END)); });
