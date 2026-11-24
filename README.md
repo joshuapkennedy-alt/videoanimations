@@ -47,7 +47,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 | Mostly white (pie, white vs red grapes) | `cards/pie.html` | `cards/pie_wide.html` | 4.5 s (135 frames) |
-| Newsletter end card (A: 16:9 /yt, B: 9:16 /yt, C: 9:16 /ig + "link in bio"; no fade-out) | `cards/endcard_b.html`, `cards/endcard_c.html` | `cards/endcard_a_wide.html` | 6.3 s (189 frames) |
+| Newsletter end card (A: 16:9 /yt, B: 9:16 /yt, C: 9:16 /ig + "link in bio", D: 16:9 /ig; no fade-out) | `cards/endcard_b.html`, `cards/endcard_c.html` | `cards/endcard_a_wide.html`, `cards/endcard_d_wide.html` | 6.3 s (189 frames) |
 
 Examples:
 
@@ -62,7 +62,7 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
 
-Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s) the Werderaner Wachtelberg label (`cards/lower_e*.html`, 6 s) and the Weißburgunder / Müller-Thurgau bars (`cards/habars*.html`, 7 s).
+Also transparent: the info cards and site labels (`cards/ovl_{einzellage,vdp,site_edelacker,site_steinmeister}*.html`, 8 / 11 / 3.5 / 3.5 s), which share `cards/ovl.js` (each page sets `window.OVL = { pos, dur, rows }`), the Name / VDP rank key (`cards/keytiles*.html`, 8.5 s) the Werderaner Wachtelberg label (`cards/lower_e*.html`, 6 s) the Weißburgunder / Müller-Thurgau bars (`cards/habars*.html`, 7 s) and FRESH · LIGHTER · OFTEN DRY (`cards/lower_f*.html`, 6 s; `window.LABEL.words` brings the words in one by one).
 
 The "Bückware" title (`cards/bueck*.html`, 9 s) and the four lower thirds (`cards/lower_{a,b,c,d}*.html`, 9 / 5 / 8 / 7 s) render the same way. The lower thirds share `cards/lower.js`; each page sets `window.LABEL = { main, sub, dur }`.
 

@@ -61,6 +61,10 @@ wide node render.js cards/pie_wide.html 4.5 out/mostly_white_pie_16x9_4K.mp4
 wide node render.js cards/endcard_a_wide.html 6.3 out/endcard_newsletter_A_youtube_16x9_4K.mp4 out/endcard_newsletter_A_youtube_16x9_endframe.png
 node render.js cards/endcard_b.html 6.3 out/endcard_newsletter_B_shorts_9x16_4K.mp4 out/endcard_newsletter_B_shorts_9x16_endframe.png
 node render.js cards/endcard_c.html 6.3 out/endcard_newsletter_C_instagram_9x16_4K.mp4 out/endcard_newsletter_C_instagram_9x16_endframe.png
+wide node render.js cards/endcard_d_wide.html 6.3 out/endcard_newsletter_D_instagram_16x9_4K.mp4 out/endcard_newsletter_D_instagram_16x9_endframe.png
+# FRESH · LIGHTER · OFTEN DRY label: transparent ProRes 4444 at 1080p (6 s)
+ALPHA=1 DPR=1 node render.js cards/lower_f.html 6 out/lower_third_fresh_lighter_often_dry_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/lower_f_wide.html 6 out/lower_third_fresh_lighter_often_dry_16x9.mov
 # Weißburgunder / Müller-Thurgau bars: transparent ProRes 4444 at 1080p (7 s)
 ALPHA=1 DPR=1 node render.js cards/habars.html 7 out/lower_third_weissburgunder_mueller_thurgau_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/habars_wide.html 7 out/lower_third_weissburgunder_mueller_thurgau_16x9.mov
