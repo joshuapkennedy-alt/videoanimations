@@ -55,6 +55,15 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Mostly white pie (4.5 s) and the newsletter end cards (6.3 s, no fade-out)
+node render.js cards/pie.html 4.5 out/mostly_white_pie_9x16_4K.mp4
+wide node render.js cards/pie_wide.html 4.5 out/mostly_white_pie_16x9_4K.mp4
+wide node render.js cards/endcard_a_wide.html 6.3 out/endcard_newsletter_A_youtube_16x9_4K.mp4 out/endcard_newsletter_A_youtube_16x9_endframe.png
+node render.js cards/endcard_b.html 6.3 out/endcard_newsletter_B_shorts_9x16_4K.mp4 out/endcard_newsletter_B_shorts_9x16_endframe.png
+node render.js cards/endcard_c.html 6.3 out/endcard_newsletter_C_instagram_9x16_4K.mp4 out/endcard_newsletter_C_instagram_9x16_endframe.png
+# Weißburgunder / Müller-Thurgau bars: transparent ProRes 4444 at 1080p (7 s)
+ALPHA=1 DPR=1 node render.js cards/habars.html 7 out/lower_third_weissburgunder_mueller_thurgau_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/habars_wide.html 7 out/lower_third_weissburgunder_mueller_thurgau_16x9.mov
 # Muschelkalk (13 s, 4 steps)
 node render.js cards/muschel.html 13 out/muschelkalk_9x16_4K.mp4 out/muschelkalk_9x16_endframe.png
 wide node render.js cards/muschel_wide.html 13 out/muschelkalk_16x9_4K.mp4 out/muschelkalk_16x9_endframe.png
