@@ -94,6 +94,20 @@ VW=1280 VH=720 DPR=1 node render.js cards/thumb_a.html stills out/thumb_a 0
 ffmpeg -i out/thumb_a/t0.png -q:v 2 out/thumbnail_A_51N.jpg
 ```
 
+### Map-card version (no people)
+
+Same terrace photo (`cards/thumb_bg.jpg`, darkened about 25%, dark vignette on the left), a two-line Playfair headline on the left (158 px, Parchment over Gold) and a Parchment map card in the right third (440×300 px, 92% opacity, soft 20 px Ink shadow): Western Europe in light Ink line art, a Gold 51°N line from a Burgundy London dot to a Burgundy Freyburg dot, and "51°N" on a small Parchment pill above the line. Built by `cards/thumb2.js`, set up by `window.THUMB2 = { variant, bg }`.
+
+| Variant | Page | Headline | File |
+| --- | --- | --- | --- |
+| A | `cards/thumb2_a.html` | "TOO FAR" / "NORTH?" | `thumb_A_too_far_north.jpg` |
+| B | `cards/thumb2_b.html` | "WINE" / "HERE?" | `thumb_B_wine_here.jpg` |
+
+```
+VW=1280 VH=720 DPR=1 node render.js cards/thumb2_a.html stills out/thumb2_a 0
+ffmpeg -i out/thumb2_a/t0.png -vf "scale=out_color_matrix=bt601:out_range=full,format=yuvj444p" -color_primaries bt709 -color_trc iec61966-2-1 -q:v 2 out/thumb_A_too_far_north.jpg
+```
+
 ## Transparent overlays
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:

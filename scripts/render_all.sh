@@ -66,6 +66,11 @@ for v in a b; do n=$([ $v = a ] && echo A_51N || echo B_londons_latitude)
   VW=1280 VH=720 DPR=1 node render.js cards/thumb_$v.html stills out/thumb_$v 0
   ffmpeg -v error -y -i out/thumb_$v/t0.png -q:v 2 out/thumbnail_$n.jpg
 done
+# YouTube thumbnail, map-card version (no people): A "TOO FAR / NORTH?", B "WINE / HERE?"
+for v in a b; do n=$([ $v = a ] && echo A_too_far_north || echo B_wine_here)
+  VW=1280 VH=720 DPR=1 node render.js cards/thumb2_$v.html stills out/thumb2_$v 0
+  ffmpeg -v error -y -i out/thumb2_$v/t0.png -vf "scale=out_color_matrix=bt601:out_range=full,format=yuvj444p" -color_primaries bt709 -color_trc iec61966-2-1 -q:v 2 out/thumb_$n.jpg
+done
 # Vineyard area 2025 (10.5 s), Place first label (9 s, no fade-out), scrolling site list (3.3 s)
 node render.js cards/area2025.html 10.5 out/vineyard_area_2025_map_9x16_4K.mp4
 wide node render.js cards/area2025_wide.html 10.5 out/vineyard_area_2025_map_16x9_4K.mp4
