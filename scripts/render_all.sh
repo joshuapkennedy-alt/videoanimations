@@ -61,6 +61,11 @@ wide node render.js cards/divbars_wide.html 11 out/vineyard_area_change_2025_bar
 node render.js cards/boxend.html 8 out/endcard_box1_out_now_9x16_4K.mp4 out/endcard_box1_out_now_9x16_endframe.png
 wide node render.js cards/boxend_wide.html 8 out/endcard_box1_out_now_16x9_4K.mp4 out/endcard_box1_out_now_16x9_endframe.png
 wide node render.js cards/nexttime_wide.html 15 out/endscreen_next_time_sachsen_16x9_4K.mp4
+# YouTube thumbnail, 1280x720 JPG: A "51°N / WINE HERE?", B "LONDON'S / LATITUDE?"
+for v in a b; do n=$([ $v = a ] && echo A_51N || echo B_londons_latitude)
+  VW=1280 VH=720 DPR=1 node render.js cards/thumb_$v.html stills out/thumb_$v 0
+  ffmpeg -v error -y -i out/thumb_$v/t0.png -q:v 2 out/thumbnail_$n.jpg
+done
 # Vineyard area 2025 (10.5 s), Place first label (9 s, no fade-out), scrolling site list (3.3 s)
 node render.js cards/area2025.html 10.5 out/vineyard_area_2025_map_9x16_4K.mp4
 wide node render.js cards/area2025_wide.html 10.5 out/vineyard_area_2025_map_16x9_4K.mp4

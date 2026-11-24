@@ -74,6 +74,26 @@ VW=1920 VH=1080 node render.js cards/thrive_wide.html 11 out/thriving_at_the_edg
 
 `scripts/render_all.sh` renders every card in both formats, including the step clips, into `out/`.
 
+## YouTube thumbnail
+
+"Wine on London's Latitude? Inside Germany's Saale-Unstrut": a 1280×720 still in two variants, rendered with `DPR=1` and saved as JPG (well under YouTube's 2 MB limit).
+
+| Variant | Page | Text |
+| --- | --- | --- |
+| A | `cards/thumb_a.html` | "51°N" (Gold, Playfair) over "WINE HERE?" (Parchment, Inter) |
+| B | `cards/thumb_b.html` | "LONDON’S" (Gold, Playfair) over "LATITUDE?" (Parchment, Inter) |
+
+Both use `cards/thumb.js`, set up by `window.THUMB = { variant, bg, cut, cutW, cutRight }`:
+
+- `bg`: the background photo (`cards/thumb_bg.jpg`, terraces with a stone vineyard house above Freyburg), darkened about 30%, warmed, with a dark vignette on the left behind the text.
+- `cut`: the presenter cut-out, a transparent PNG (`cards/thumb_cut.png`, chest-up, background removed with @imgly/background-removal-node), placed bottom-right with a 6 px Parchment outline and a soft shadow; `cutW` is its width at 700 px tall and `cutRight` its offset from the right edge (negative pushes it past the edge). Leave `bg` or `cut` empty to see a placeholder.
+- A small Germany outline (about 120 px tall) with a Burgundy pin on Saale-Unstrut sits bottom-left. The bottom-right corner is kept clear of anything important (YouTube's timestamp covers it).
+
+```
+VW=1280 VH=720 DPR=1 node render.js cards/thumb_a.html stills out/thumb_a 0
+ffmpeg -i out/thumb_a/t0.png -q:v 2 out/thumbnail_A_51N.jpg
+```
+
 ## Transparent overlays
 
 "Why the walls matter" is a lower third for use over video. Render it with `ALPHA=1` for a transparent background and Apple ProRes 4444 with alpha (`.mov`), at 1080p:
