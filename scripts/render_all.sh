@@ -55,6 +55,12 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Change vs 2024 bars (11 s), Box #1 end card (8 s, no fade-out), Next time end-screen background (15 s, 16:9 only)
+node render.js cards/divbars.html 11 out/vineyard_area_change_2025_bars_9x16_4K.mp4
+wide node render.js cards/divbars_wide.html 11 out/vineyard_area_change_2025_bars_16x9_4K.mp4
+node render.js cards/boxend.html 8 out/endcard_box1_out_now_9x16_4K.mp4 out/endcard_box1_out_now_9x16_endframe.png
+wide node render.js cards/boxend_wide.html 8 out/endcard_box1_out_now_16x9_4K.mp4 out/endcard_box1_out_now_16x9_endframe.png
+wide node render.js cards/nexttime_wide.html 15 out/endscreen_next_time_sachsen_16x9_4K.mp4
 # Vineyard area 2025 (10.5 s), Place first label (9 s, no fade-out), scrolling site list (3.3 s)
 node render.js cards/area2025.html 10.5 out/vineyard_area_2025_map_9x16_4K.mp4
 wide node render.js cards/area2025_wide.html 10.5 out/vineyard_area_2025_map_16x9_4K.mp4
