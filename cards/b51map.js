@@ -1,11 +1,12 @@
 // Saale-Unstrut close-up map in our style (rivers from OpenStreetMap, the 51°N parallel, a Süßer See inset), two versions:
-//   window.MODE = 'sites': Breitengrad 51's 13 vineyard sites, numbered and listed by area (16 s)
-//   window.MODE = 'vdp':   the three VDP family estates, Böhme & Töchter, Pawis and Hey, as pins (10 s)
+//   window.MODE = 'sites': Breitengrad 51's 13 vineyard sites, numbered and listed by area (16 s; holds at the end, no fade-out)
+//   window.MODE = 'vdp':   continues from the sites' last frame: the list goes, the sites dim, and the three VDP family
+//                          estates (Böhme & Töchter, Pawis, Hey) drop in as pins (9 s)
 // Geometry in b51_geo.js ([lat, lon]); projected here onto a local equirectangular grid. window.WIDE selects 16:9.
 const WIDE = !!window.WIDE, SW = WIDE ? 1920 : 1080, SH = WIDE ? 1080 : 1920, MODE = window.MODE || 'sites';
 stage.style.width = SW + 'px'; stage.style.height = SH + 'px';
 const NS = 'http://www.w3.org/2000/svg', G = window.B51, BURG = '#6B2737', OLIVE = '#7E8F26', RIVER = '#86AECB', RLAB = '#3F6B8A';
-const END = MODE === 'sites' ? 16.0 : 10.0, OUT = END - 0.4;
+const END = MODE === 'sites' ? 16.0 : 9.0;
 const all = div({ left: 0, top: 0, width: SW + 'px', height: SH + 'px' });
 const COS = Math.cos(51.15 * Math.PI / 180);
 
@@ -48,7 +49,7 @@ const towns = G.towns.map(t => { const f = t.where === 'inset' ? PI_ : P, [x, y]
   const d = el('circle', { cx: x, cy: y, r, fill: C.ink, opacity: 0.85 });
   const side = { Laucha: 'left', 'Weißenfels': 'left', 'Höhnstedt': 'left', Freyburg: 'aboveRight', Eisleben: 'below' }[t.name] || 'right';
   const pos = { right: [x + 9 * Z, y - 11 * Z, 'none'], left: [x - 9 * Z, y - 11 * Z, 'translateX(-100%)'], above: [x, y - 8 * Z, 'translate(-50%, -100%)'], aboveRight: [x + 5 * Z, y - 8 * Z, 'translateY(-100%)'], below: [x, y + 6 * Z, 'translateX(-50%)'] }[side];
-  const lab = div({ left: pos[0] + 'px', top: pos[1] + 'px', transform: pos[2], whiteSpace: 'nowrap', display: MODE === 'vdp' && t.name === 'Gleina' ? 'none' : 'block',
+  const lab = div({ left: pos[0] + 'px', top: pos[1] + 'px', transform: pos[2], whiteSpace: 'nowrap', 
     font: `${t.big ? 600 : 500} ${Math.round((t.big ? 19 : 16) * Z * (t.where === 'inset' ? 0.85 : 1))}px Inter`, color: t.big ? C.ink : C.sub }, t.name, all);
   lab.style.cssText += ';' + halo; return [d, lab]; });
 // river names
@@ -61,46 +62,44 @@ el('path', { d: `M${sb[0]},${sb[1] - 6}V${sb[1]}H${sb[0] + 5 * kmPx}V${sb[1] - 6
 const scaleLab = div({ left: (sb[0] + 5 * kmPx + 8) + 'px', top: (sb[1] - 14) + 'px', font: `500 ${Math.round(15 * Z)}px Inter`, color: C.sub }, '5 km', all);
 
 // ---- header ----
+// both titles exist; the VDP version opens on the sites title and swaps it for its own
 const HX = WIDE ? 80 : 510, align = WIDE ? 'left' : 'center';
-const head = div({ left: (WIDE ? HX : 60) + 'px', top: (WIDE ? 70 : 300) + 'px', width: (WIDE ? 1200 : 900) + 'px', textAlign: align, font: `600 ${WIDE ? 24 : 26}px Inter`, letterSpacing: '7px', color: C.gold },
-  MODE === 'sites' ? 'BREITENGRAD 51' : 'THE VDP ESTATES', all);
-const title = div({ left: (WIDE ? HX : 60) + 'px', top: (WIDE ? 104 : 340) + 'px', width: (WIDE ? 1200 : 900) + 'px', textAlign: align, font: `700 ${WIDE ? 74 : 72}px PF`, color: C.ink, lineHeight: '1.05' },
-  MODE === 'sites' ? 'Their vineyard sites' : 'Three family estates', all);
-fadeIn(head, 0); fadeIn(title, 0.15);
+const mkHead = (h, ti) => [
+  div({ left: (WIDE ? HX : 60) + 'px', top: (WIDE ? 70 : 300) + 'px', width: (WIDE ? 1200 : 900) + 'px', textAlign: align, font: `600 ${WIDE ? 24 : 26}px Inter`, letterSpacing: '7px', color: C.gold }, h, all),
+  div({ left: (WIDE ? HX : 60) + 'px', top: (WIDE ? 104 : 340) + 'px', width: (WIDE ? 1200 : 900) + 'px', textAlign: align, font: `700 ${WIDE ? 74 : 72}px PF`, color: C.ink, lineHeight: '1.05' }, ti, all)];
+const headS = mkHead('BREITENGRAD 51', 'Their vineyard sites'), headV = MODE === 'vdp' ? mkHead('THE VDP ESTATES', 'Three family estates') : null;
 
-// ---- content ----
-const items = [];   // [element(s), start time] pairs animated below
-if (MODE === 'sites') {
-  const GROUPS = [['UNSTRUT', [1, 2, 3, 4]], ['NAUMBURG &amp; SAALE', [5, 6, 7, 8, 9]], ['SOUTH OF BAD KÖSEN', [10, 11]], ['SÜSSER SEE', [12, 13]]];
-  const T0 = 3.0, STEP = 0.45, when = n => T0 + (n - 1) * STEP;
-  // markers
-  const NUDGE = { 8: [-9, -6], 9: [8, 6] };   // px; both stay within ~0.5 km of their place
-  G.sites.forEach(s => { const f = s.where === 'inset' ? PI_ : P, [x0, y0] = f(s.at), [nx, ny] = NUDGE[s.n] || [0, 0], x = x0 + nx * Z, y = y0 + ny * Z, R = (s.where === 'inset' ? 11 : 12) * Z;
-    const g = el('g', { transform: `translate(${x} ${y})` }); const inner = el('g', {}, g);
-    el('circle', { r: R, fill: OLIVE, stroke: '#F6EFE1', 'stroke-width': 2 }, inner);
-    const t = el('text', { 'text-anchor': 'middle', y: R * 0.36, fill: '#FBF6EC', 'font-family': 'Inter', 'font-weight': 700, 'font-size': (s.n > 9 ? 12 : 14) * Z * (s.where === 'inset' ? 0.9 : 1) }, inner); t.textContent = s.n;
-    items.push({ kind: 'pop', el: inner, a: when(s.n) }); });
-  // list, grouped by area
-  const cols = WIDE ? [[0, 2], [1, 3]] : [[0, 2], [1, 3]];
-  const LX = WIDE ? [960, 1400] : [90, 530], LY = WIDE ? 430 : 1166, RH = WIDE ? 40 : 28, HH = WIDE ? 46 : 34, FS = WIDE ? 23 : 19;
-  cols.forEach((gs, c) => { let y = LY;
-    gs.forEach(gi => { const [gname, ns] = GROUPS[gi];
-      const h = div({ left: LX[c] + 'px', top: y + 'px', font: `600 ${WIDE ? 16 : 14}px Inter`, letterSpacing: '4px', color: C.gold, whiteSpace: 'nowrap' }, gname, all);
-      items.push({ kind: 'fade', el: h, a: when(ns[0]) - 0.1 }); y += HH * 0.8;
-      ns.forEach(n => { const s = G.sites.find(q => q.n === n);
-        const row = div({ left: LX[c] + 'px', top: y + 'px', display: 'flex', alignItems: 'center', gap: (WIDE ? 12 : 9) + 'px', whiteSpace: 'nowrap' },
-          `<span style="flex:none;width:${WIDE ? 28 : 22}px;height:${WIDE ? 28 : 22}px;border-radius:50%;background:${OLIVE};color:#FBF6EC;font:700 ${WIDE ? 13 : 11}px Inter;display:flex;align-items:center;justify-content:center">${n}</span>` +
-          `<span style="font:500 ${FS}px Inter;color:${C.ink}">${s.name}</span>`, all);
-        items.push({ kind: 'fade', el: row, a: when(n) + 0.1 }); y += RH; });
-      y += HH * 0.45; }); });
-} else {
-  // VDP estates: burgundy pins and small parchment labels; the same three as tiles in the side column (16:9) / below the map (9:16)
+// ---- Breitengrad 51 sites: markers and the list (in both versions; the VDP one starts with them all showing) ----
+const items = [];
+const GROUPS = [['UNSTRUT', [1, 2, 3, 4]], ['NAUMBURG &amp; SAALE', [5, 6, 7, 8, 9]], ['SOUTH OF BAD KÖSEN', [10, 11]], ['SÜSSER SEE', [12, 13]]];
+const T0 = 3.0, STEP = 0.45, when = n => T0 + (n - 1) * STEP;
+const NUDGE = { 8: [-9, -6], 9: [8, 6] };   // px; sites 8 and 9 are ~1 km apart, both stay within ~0.5 km of their place
+const markers = [], listEls = [];
+G.sites.forEach(s => { const f = s.where === 'inset' ? PI_ : P, [x0, y0] = f(s.at), [nx, ny] = NUDGE[s.n] || [0, 0], x = x0 + nx * Z, y = y0 + ny * Z, R = (s.where === 'inset' ? 11 : 12) * Z;
+  const g = el('g', { transform: `translate(${x} ${y})` }); const inner = el('g', {}, g);
+  el('circle', { r: R, fill: OLIVE, stroke: '#F6EFE1', 'stroke-width': 2 }, inner);
+  const t = el('text', { 'text-anchor': 'middle', y: R * 0.36, fill: '#FBF6EC', 'font-family': 'Inter', 'font-weight': 700, 'font-size': (s.n > 9 ? 12 : 14) * Z * (s.where === 'inset' ? 0.9 : 1) }, inner); t.textContent = s.n;
+  markers.push(g); items.push({ kind: 'pop', el: inner, a: when(s.n), sites: true }); });
+const LX = WIDE ? [960, 1400] : [90, 530], LY = WIDE ? 430 : 1166, RH = WIDE ? 40 : 28, HH = WIDE ? 46 : 34, FS = WIDE ? 23 : 19;
+[[0, 2], [1, 3]].forEach((gs, c) => { let y = LY;
+  gs.forEach(gi => { const [gname, ns] = GROUPS[gi];
+    const h = div({ left: LX[c] + 'px', top: y + 'px', font: `600 ${WIDE ? 16 : 14}px Inter`, letterSpacing: '4px', color: C.gold, whiteSpace: 'nowrap' }, gname, all);
+    listEls.push(h); items.push({ kind: 'fade', el: h, a: when(ns[0]) - 0.1, sites: true }); y += HH * 0.8;
+    ns.forEach(n => { const s = G.sites.find(q => q.n === n);
+      const row = div({ left: LX[c] + 'px', top: y + 'px', display: 'flex', alignItems: 'center', gap: (WIDE ? 12 : 9) + 'px', whiteSpace: 'nowrap' },
+        `<span style="flex:none;width:${WIDE ? 28 : 22}px;height:${WIDE ? 28 : 22}px;border-radius:50%;background:${OLIVE};color:#FBF6EC;font:700 ${WIDE ? 13 : 11}px Inter;display:flex;align-items:center;justify-content:center">${n}</span>` +
+        `<span style="font:500 ${FS}px Inter;color:${C.ink}">${s.name}</span>`, all);
+      listEls.push(row); items.push({ kind: 'fade', el: row, a: when(n) + 0.1, sites: true }); y += RH; });
+    y += HH * 0.45; }); });
+
+// ---- VDP estates: pins with labels, and tiles where the list was ----
+const V0 = 1.8;   // first pin
+if (MODE === 'vdp') {
   const pin = `<svg width="${30 * Z}" height="${42 * Z}" viewBox="0 0 26 36" style="display:block;overflow:visible"><path d="M13 35C13 35 2 21.5 2 13a11 11 0 0 1 22 0c0 8.5-11 22-11 22z" fill="${BURG}" stroke="#F7F1E6" stroke-width="2"/><circle cx="13" cy="13" r="4.2" fill="#F7F1E6"/></svg>`;
   const LBL = { Gleina: 'left', Zscheiplitz: 'below', 'Naumburg-Weinberge': 'left' };
-  G.vdp.forEach((v, i) => { const [x, y] = P(v.at), a = 3.0 + i * 0.8;
+  G.vdp.forEach((v, i) => { const [x, y] = P(v.at), a = V0 + i * 0.8;
     const p = div({ left: (x - 15 * Z) + 'px', top: (y - 42 * Z) + 'px', filter: 'drop-shadow(0 2px 3px rgba(40,29,22,.3))' }, pin, all);
-    const side = LBL[v.place];
-    const lp = { right: [x + 22 * Z, y - 52 * Z, 'none'], left: [x - 22 * Z, y - 52 * Z, 'translateX(-100%)'], below: [x, y + 10 * Z, 'translateX(-50%)'] }[side];
+    const lp = { right: [x + 22 * Z, y - 52 * Z, 'none'], left: [x - 22 * Z, y - 52 * Z, 'translateX(-100%)'], below: [x, y + 10 * Z, 'translateX(-50%)'] }[LBL[v.place]];
     const lab = div({ left: lp[0] + 'px', top: lp[1] + 'px', transform: lp[2], whiteSpace: 'nowrap',
       background: 'rgba(246,239,225,.95)', border: '1.5px solid #DCCDB2', borderRadius: '10px', padding: `${6 * Z}px ${12 * Z}px`, boxShadow: '0 4px 12px rgba(40,29,22,.14)' },
       `<div style="font:700 ${Math.round(24 * Z)}px PF;color:${C.ink};line-height:1.1">${v.name}</div><div style="font:500 ${Math.round(15 * Z)}px Inter;color:${C.sub};margin-top:2px">${v.place}</div>`, all);
@@ -111,23 +110,38 @@ if (MODE === 'sites') {
     const t = div({ left: tx + 'px', top: (ty0 + i * (th + tg)) + 'px', width: tw + 'px', height: th + 'px', boxSizing: 'border-box', background: '#F6EFE1', border: '2px solid #DCCDB2', borderRadius: '14px',
       boxShadow: '0 8px 20px rgba(40,29,22,.10)', display: 'flex', alignItems: 'center', gap: '18px', padding: `0 ${WIDE ? 24 : 20}px` },
       `<div style="flex:none">${pin}</div><div><div style="font:700 ${WIDE ? 32 : 28}px PF;color:${C.ink};line-height:1.1">${v.name}</div><div style="font:400 ${WIDE ? 21 : 19}px Inter;color:${C.sub};margin-top:4px">${v.place} · ${blurb[v.name]}</div></div>`, all);
-    items.push({ kind: 'fade', el: t, a: 3.0 + i * 0.8 + 0.4 }); });
+    items.push({ kind: 'fade', el: t, a: V0 + i * 0.8 + 0.4 }); });
 }
 
 // ---- animation ----
+// sites: everything builds from nothing and holds to the end (no fade-out), so the VDP version can follow on the cut.
+// vdp: starts on the sites' last frame (all of it drawn), then 0.3-1.2 s the sites title and list go, the markers dim to
+// 35% and the village name at Gleina makes room for its estate label; the VDP title comes in; pins from 1.8 s; fade-out at the end.
 const backOut = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+const gleinaLab = towns[G.towns.findIndex(t => t.name === 'Gleina')][1];
 anims.push(t => {
-  const d = ease(seg(t, 0.3, 2.0)); rivers.forEach(([p, L]) => p.style.strokeDashoffset = (L + 1) * (1 - d));
-  insetG.style.opacity = eout(seg(t, 1.0, 1.6)); insetLab.style.opacity = eout(seg(t, 1.2, 1.7));
-  const tw = eout(seg(t, 1.0, 1.6)); towns.forEach(([dt, lab]) => { dt.setAttribute('opacity', 0.85 * tw); lab.style.opacity = tw; });
-  rLabels.forEach(l => l.style.opacity = eout(seg(t, 1.6, 2.2)));
-  parRect.setAttribute('width', (p51b[0] - p51a[0]) * ease(seg(t, 1.8, 2.8))); parLab.style.opacity = eout(seg(t, 2.4, 2.9));
-  scale.style.opacity = scaleLab.style.opacity = eout(seg(t, 2.2, 2.7));
-  items.forEach(it => {
-    if (it.kind === 'pop') { const r = seg(t, it.a, it.a + 0.4); it.el.setAttribute('transform', `scale(${r > 0 ? backOut(r) : 0})`); }
-    else if (it.kind === 'drop') { const k = eout(seg(t, it.a, it.a + 0.45)); it.el.style.opacity = k; it.el.style.translate = `0 ${-24 * (1 - k)}px`; }
-    else { const k = eout(seg(t, it.a, it.a + 0.45)); it.el.style.opacity = k; it.el.style.translate = `0 ${10 * (1 - k)}px`; }
+  const VD = MODE === 'vdp', tb = VD ? t + 100 : t;   // the base map and the sites are already complete in the VDP version
+  const d = ease(seg(tb, 0.3, 2.0)); rivers.forEach(([p, L]) => p.style.strokeDashoffset = (L + 1) * (1 - d));
+  insetG.style.opacity = eout(seg(tb, 1.0, 1.6)); insetLab.style.opacity = eout(seg(tb, 1.2, 1.7));
+  const tw = eout(seg(tb, 1.0, 1.6)); towns.forEach(([dt, lab]) => { dt.setAttribute('opacity', 0.85 * tw); lab.style.opacity = tw; });
+  rLabels.forEach(l => l.style.opacity = eout(seg(tb, 1.6, 2.2)));
+  parRect.setAttribute('width', (p51b[0] - p51a[0]) * ease(seg(tb, 1.8, 2.8))); parLab.style.opacity = eout(seg(tb, 2.4, 2.9));
+  scale.style.opacity = scaleLab.style.opacity = eout(seg(tb, 2.2, 2.7));
+  // titles
+  const hs = [eout(seg(tb, 0, 0.4)), eout(seg(tb, 0.15, 0.55))], swap = VD ? ease(seg(t, 0.3, 0.8)) : 0;
+  headS.forEach((e, i) => { e.style.opacity = hs[i] * (1 - swap); e.style.translate = `0 ${14 * (1 - hs[i])}px`; });
+  if (headV) headV.forEach((e, i) => { const k = eout(seg(t, 0.9 + i * 0.15, 1.4 + i * 0.15)); e.style.opacity = k; e.style.translate = `0 ${14 * (1 - k)}px`; });
+  items.forEach(it => { const tt = it.sites ? tb : t;
+    if (it.kind === 'pop') { const r = seg(tt, it.a, it.a + 0.4); it.el.setAttribute('transform', `scale(${r > 0 ? backOut(r) : 0})`); }
+    else if (it.kind === 'drop') { const k = eout(seg(tt, it.a, it.a + 0.45)); it.el.style.opacity = k; it.el.style.translate = `0 ${-24 * (1 - k)}px`; }
+    else { const k = eout(seg(tt, it.a, it.a + 0.45)); it.el.style.opacity = k; it.el.style.translate = `0 ${10 * (1 - k)}px`; }
   });
-  all.style.opacity = 1 - ease(seg(t, OUT, END));
+  if (VD) {
+    const x = ease(seg(t, 0.3, 1.2));
+    listEls.forEach(e => { e.style.opacity = 1 - x; });
+    markers.forEach(g => g.setAttribute('opacity', 1 - 0.65 * x));
+    gleinaLab.style.opacity = 1 - ease(seg(t, 0.3, 0.9));
+    all.style.opacity = 1 - ease(seg(t, END - 0.4, END));
+  }
 });
 render(0);
