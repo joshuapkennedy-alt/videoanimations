@@ -1,11 +1,11 @@
 // "Old to new": a three-point timeline (Kloster Pforta, Rotkäppchen, 1990) over four family-estate tiles, 32.8 s.
 // Same dots, type and easing as timeline.js. The line is ink up to 1990 and turns gold after it (from 13 s).
-// Each tile has an empty square photo slot (photos are added in the editor).
+// Each tile has a small gold vine-leaf line icon, the name and one line (all four identical in size and style).
 // 16:9: timeline across the top half, tiles in a row below. 9:16: timeline top to bottom, tiles in a 2x2 grid below,
 // everything between 15% and 75% of the height and 120+ px clear of the right edge.
 const WIDE = !!window.WIDE, SW = WIDE ? 1920 : 1080, SH = WIDE ? 1080 : 1920;
 stage.style.width = SW + 'px'; stage.style.height = SH + 'px';
-const BURG = '#6B2737', OUT = 32.4, END = 32.8;
+const BURG = '#6B2737', NS = 'http://www.w3.org/2000/svg', OUT = 32.4, END = 32.8;
 const all = div({ left: 0, top: 0, width: SW + 'px', height: SH + 'px' });
 const backOut = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
 
@@ -55,41 +55,44 @@ PTS.forEach((p, i) => {
 });
 
 // ---- family tiles ----
+// four identical tiles: a small gold vine-leaf line icon at the top, the name and one line. No logos, photos, initials or tags.
 const FAM = [
   { name: 'Herzer', line: 'started in 1992', a: 15.0 },
   { name: 'Pawis', line: 'began as a side business on ½ ha', a: 17.4 },
   { name: 'Hey', line: 'cleared brambles, repaired dry-stone walls', a: 21.2 },
-  { name: 'Böhme &amp; Töchter', line: 'first vines 1986, still in the GDR', a: 26.6, tag: 'In Vine to Table Box #1' },
+  { name: 'Böhme &amp; Töchter', line: 'first vines 1986, still in the GDR', a: 26.6 },
 ];
 const tileSt = { background: '#F6EFE1', border: '2px solid #DCCDB2', borderRadius: '16px', boxSizing: 'border-box', boxShadow: '0 8px 24px rgba(40,29,22,.12), 0 2px 5px rgba(40,29,22,.08)' };
-const slotSt = { background: '#E4DCCD', border: `2px solid ${C.gold}`, borderRadius: '10px', boxSizing: 'border-box', flex: 'none' };
-const SLOTS = [];
+const LEAF = '<path d="M50 84C46 76 40 72 31 72C23 72 17 66 19 58C11 56 7 48 11 41C15 35 22 34 27 36C25 27 31 19 39 21C41 13 47 9 50 9C53 9 59 13 61 21C69 19 75 27 73 36C78 34 85 35 89 41C93 48 89 56 81 58C83 66 77 72 69 72C60 72 54 76 50 84Z"/>' +
+  '<path d="M50 84V92M50 84V32M50 66L30 50M50 66L70 50M50 52L37 34M50 52L63 34"/>';
+const IS = WIDE ? 58 : 56;   // icon size, the same on every tile
+function leaf(parent) {
+  const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('width', IS); svg.setAttribute('height', IS); svg.setAttribute('viewBox', '0 0 100 100');
+  svg.style.display = 'block'; svg.style.flex = 'none'; svg.style.overflow = 'visible';
+  svg.innerHTML = `<g fill="none" stroke="${C.gold}" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round">${LEAF}</g>`;
+  parent.appendChild(svg);
+  return [...svg.querySelectorAll('path')].map(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; return [p, L]; });
+}
 FAM.forEach((f, k) => {
-  let box, tag;
+  let box, strokes;
   if (WIDE) {
-    const w = 330, gap = 40, x = (SW - 4 * w - 3 * gap) / 2 + k * (w + gap), y = 520, ps = w - 40;
-    box = div(Object.assign({ left: x + 'px', top: y + 'px', width: w + 'px', height: '520px', padding: '20px', display: 'flex', flexDirection: 'column' }, tileSt), '', all);
-    const slot = div(Object.assign({ position: 'static', width: ps + 'px', height: ps + 'px' }, slotSt), '', box);
-    SLOTS.push([x + 20, y + 20, ps]);
+    const w = 330, gap = 40, x = (SW - 4 * w - 3 * gap) / 2 + k * (w + gap), y = 580;
+    box = div(Object.assign({ left: x + 'px', top: y + 'px', width: w + 'px', height: '236px', padding: '24px 20px 22px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }, tileSt), '', all);
+    strokes = leaf(box);
     div({ position: 'static', font: '700 34px PF', color: C.ink, lineHeight: '1.1', marginTop: '16px', whiteSpace: 'nowrap' }, f.name, box);
     div({ position: 'static', font: '400 22px Inter', color: C.sub, lineHeight: '1.3', marginTop: '6px', textWrap: 'balance' }, f.line, box);
-    if (f.tag) tag = div({ position: 'static', alignSelf: 'flex-start', marginTop: 'auto', font: '600 16px Inter', letterSpacing: '0.5px', color: '#FBF6EC', background: BURG, borderRadius: '999px', padding: '6px 14px' }, f.tag, box);
   } else {
-    const w = 440, h = 262, gx = 20, gy = 18, x = 60 + (k % 2) * (w + gx), y = 896 + Math.floor(k / 2) * (h + gy), ps = 150;
-    box = div(Object.assign({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', padding: '18px', display: 'flex', gap: '18px' }, tileSt), '', all);
-    div(Object.assign({ position: 'static', width: ps + 'px', height: ps + 'px' }, slotSt), '', box);
-    SLOTS.push([x + 18, y + 18, ps]);
-    const col = div({ position: 'static', display: 'flex', flexDirection: 'column', flex: '1', height: '100%' }, '', box);
-    div({ position: 'static', font: '700 36px PF', color: C.ink, lineHeight: '1.1' }, f.name, col);
-    div({ position: 'static', font: '400 22px Inter', color: C.sub, lineHeight: '1.3', marginTop: '6px', textWrap: 'balance' }, f.line, col);
-    if (f.tag) tag = div({ position: 'absolute', left: '18px', bottom: '18px', font: '600 16px Inter', letterSpacing: '0.5px', color: '#FBF6EC', background: BURG, borderRadius: '999px', padding: '6px 14px', whiteSpace: 'nowrap' }, f.tag, box);
+    const w = 440, h = 210, gx = 20, gy = 20, x = 60 + (k % 2) * (w + gx), y = 896 + Math.floor(k / 2) * (h + gy);
+    box = div(Object.assign({ left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px', padding: '22px 24px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }, tileSt), '', all);
+    strokes = leaf(box);
+    div({ position: 'static', font: '700 34px PF', color: C.ink, lineHeight: '1.1', marginTop: '12px', whiteSpace: 'nowrap' }, f.name, box);
+    div({ position: 'static', font: '400 22px Inter', color: C.sub, lineHeight: '1.3', marginTop: '6px', textWrap: 'balance' }, f.line, box);
   }
   anims.push(t => {
     const b = eout(seg(t, f.a, f.a + 0.5)); box.style.opacity = b; box.style.translate = `0 ${30 * (1 - b)}px`;
-    if (tag) { const r = seg(t, f.a + 0.5, f.a + 0.95); tag.style.transform = `scale(${r > 0 ? backOut(r) : 0})`; tag.style.transformOrigin = 'left center'; }
+    const d = ease(seg(t, f.a + 0.2, f.a + 0.9)); strokes.forEach(([p, L]) => p.style.strokeDashoffset = L * (1 - d));
   });
 });
-window.PHOTO_SLOTS = SLOTS;   // for reference when placing photos: [x, y, size] in frame pixels
 
 anims.push(t => { all.style.opacity = 1 - ease(seg(t, OUT, END)); });
 render(0);
