@@ -55,6 +55,15 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Climate change: Winner or loser? (4.8 s, no fade-out), The good (17.4 s), The bad (21.4 s), How growers are adapting (transparent, 11 s)
+node render.js cards/wol.html 4.8 out/climate_winner_or_loser_9x16_4K.mp4 out/climate_winner_or_loser_9x16_endframe.png
+wide node render.js cards/wol_wide.html 4.8 out/climate_winner_or_loser_16x9_4K.mp4 out/climate_winner_or_loser_16x9_endframe.png
+node render.js cards/climate_good.html 17.4 out/climate_the_good_9x16_4K.mp4
+wide node render.js cards/climate_good_wide.html 17.4 out/climate_the_good_16x9_4K.mp4
+node render.js cards/climate_bad.html 21.4 out/climate_the_bad_9x16_4K.mp4
+wide node render.js cards/climate_bad_wide.html 21.4 out/climate_the_bad_16x9_4K.mp4
+ALPHA=1 DPR=1 node render.js cards/adapting.html 11 out/lower_third_how_growers_are_adapting_9x16.mov
+ALPHA=1 DPR=1 wide node render.js cards/adapting_wide.html 11 out/lower_third_how_growers_are_adapting_16x9.mov
 # Saale-Unstrut close-up maps: Breitengrad 51 sites (16 s) and the VDP estates (10 s); see tools/map/b51
 node render.js cards/b51_sites.html 16 out/breitengrad51_sites_map_9x16_4K.mp4
 wide node render.js cards/b51_sites_wide.html 16 out/breitengrad51_sites_map_16x9_4K.mp4
