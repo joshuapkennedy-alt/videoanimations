@@ -47,6 +47,7 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 | The co-op: Winzervereinigung Freyburg 1934 / 1951 (timeline.js with `window.TL`) | `cards/coop.html` | `cards/coop_wide.html` | 13.5 s (405 frames) |
+| New ideas: the next generation (three tiles; 51°N line across Breitengrad 51) | `cards/newideas.html` | `cards/newideas_wide.html` | 18.5 s (555 frames) |
 | Old to new: the makers (timeline + four identical family tiles with a gold vine-leaf icon) | `cards/makers.html` | `cards/makers_wide.html` | 32.8 s (984 frames) |
 | Winzervereinigung today (~320 growers, ~half the vines) | `cards/members.html` | `cards/members_wide.html` | 5 s (150 frames) |
 | Saale-Unstrut in a box (Vine to Table box #1, three tiles) | `cards/box.html` | `cards/box_wide.html` | 8.3 s (249 frames) |

@@ -55,6 +55,9 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# New ideas: the next generation (18.5 s)
+node render.js cards/newideas.html 18.5 out/new_ideas_next_generation_9x16_4K.mp4
+wide node render.js cards/newideas_wide.html 18.5 out/new_ideas_next_generation_16x9_4K.mp4
 # Old to new: the makers (32.8 s)
 node render.js cards/makers.html 32.8 out/old_to_new_makers_9x16_4K.mp4
 wide node render.js cards/makers_wide.html 32.8 out/old_to_new_makers_16x9_4K.mp4
