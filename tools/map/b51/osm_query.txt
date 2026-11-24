@@ -1,0 +1,8 @@
+[out:json][timeout:180];
+(
+  way["waterway"="river"]["name"~"^(Saale|Unstrut|Ilm|Salza)$"](50.85,11.35,51.62,12.12);
+  way["natural"="water"]["name"~"Süßer See"](51.40,11.55,51.52,11.80);
+  relation["natural"="water"]["name"~"Süßer See"](51.40,11.55,51.52,11.80);
+  node["place"~"^(town|city|village|hamlet|suburb|locality)$"]["name"~"^(Freyburg|Freyburg \(Unstrut\)|Naumburg|Naumburg \(Saale\)|Weißenfels|Bad Kösen|Laucha|Laucha an der Unstrut|Bad Sulza|Jena|Gleina|Kirchscheidungen|Burgscheidungen|Roßbach|Kaatschen|Löberschütz|Lutherstadt Eisleben|Höhnstedt|Zscheiplitz|Dorndorf|Goseck|Seeburg|Saalhäuser|Tultewitz|Schulpforte|Henne|Almrich|Großjena|Weinberge|Balgstädt|Pödelist|Dorndorf-Steudnitz)$"](50.85,11.35,51.62,12.12);
+);
+out geom;

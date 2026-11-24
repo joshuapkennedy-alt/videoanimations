@@ -55,6 +55,11 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Saale-Unstrut close-up maps: Breitengrad 51 sites (16 s) and the VDP estates (10 s); see tools/map/b51
+node render.js cards/b51_sites.html 16 out/breitengrad51_sites_map_9x16_4K.mp4
+wide node render.js cards/b51_sites_wide.html 16 out/breitengrad51_sites_map_16x9_4K.mp4
+node render.js cards/b51_vdp.html 10 out/vdp_estates_map_9x16_4K.mp4
+wide node render.js cards/b51_vdp_wide.html 10 out/vdp_estates_map_16x9_4K.mp4
 # New ideas: the next generation (18.5 s)
 node render.js cards/newideas.html 18.5 out/new_ideas_next_generation_9x16_4K.mp4
 wide node render.js cards/newideas_wide.html 18.5 out/new_ideas_next_generation_16x9_4K.mp4
