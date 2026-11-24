@@ -55,6 +55,13 @@ wide node render.js cards/werder_wide.html 36.2 out/freyburg_werder_three_states
 # Werderaner Wachtelberg label: transparent ProRes 4444 at 1080p (6 s)
 ALPHA=1 DPR=1 node render.js cards/lower_e.html 6 out/lower_third_werderaner_wachtelberg_9x16.mov
 ALPHA=1 DPR=1 wide node render.js cards/lower_e_wide.html 6 out/lower_third_werderaner_wachtelberg_16x9.mov
+# Vineyard area 2025 (10.5 s), Place first label (9 s, no fade-out), scrolling site list (3.3 s)
+node render.js cards/area2025.html 10.5 out/vineyard_area_2025_map_9x16_4K.mp4
+wide node render.js cards/area2025_wide.html 10.5 out/vineyard_area_2025_map_16x9_4K.mp4
+node render.js cards/winelabel2.html 9 out/place_first_wine_label_9x16_4K.mp4 out/place_first_wine_label_9x16_endframe.png
+wide node render.js cards/winelabel2_wide.html 9 out/place_first_wine_label_16x9_4K.mp4 out/place_first_wine_label_16x9_endframe.png
+node render.js cards/sitelist.html 3.29 out/saale_unstrut_site_list_scroll_9x16_4K.mp4
+wide node render.js cards/sitelist_wide.html 3.29 out/saale_unstrut_site_list_scroll_16x9_4K.mp4
 # Climate change: Winner or loser? (4.8 s, no fade-out), The good (17.4 s), The bad (21.4 s), How growers are adapting (transparent, 11 s)
 node render.js cards/wol.html 4.8 out/climate_winner_or_loser_9x16_4K.mp4 out/climate_winner_or_loser_9x16_endframe.png
 wide node render.js cards/wol_wide.html 4.8 out/climate_winner_or_loser_16x9_4K.mp4 out/climate_winner_or_loser_16x9_endframe.png

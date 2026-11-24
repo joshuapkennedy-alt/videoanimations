@@ -47,6 +47,9 @@ The optional PNG is the card's final state, rendered losslessly (not grabbed fro
 | How to read a German wine label (fictional "Weingut Musterhof") | `cards/winelabel.html` | `cards/winelabel_wide.html` | 10 s (300 frames) |
 | Freyburg – Werder: 13 regions, then 3 states · 1 region | `cards/werder.html` | `cards/werder_wide.html` | 36.2 s (1086 frames) |
 | The co-op: Winzervereinigung Freyburg 1934 / 1951 (timeline.js with `window.TL`) | `cards/coop.html` | `cards/coop_wide.html` | 13.5 s (405 frames) |
+| Vineyard area 2025 (13-regions map, 12 down-arrows, Saale-Unstrut +10 ha) | `cards/area2025.html` | `cards/area2025_wide.html` | 10.5 s (315 frames) |
+| Place first: the Musterhof label, Saale-Unstrut → Freyburger → Edelacker (no fade-out) | `cards/winelabel2.html` | `cards/winelabel2_wide.html` | 9 s (270 frames) |
+| Saale-Unstrut vineyard sites, scrolling list | `cards/sitelist.html` | `cards/sitelist_wide.html` | 3.3 s (99 frames) |
 | Climate change: Winner or loser? (no fade-out) | `cards/wol.html` | `cards/wol_wide.html` | 4.8 s (144 frames) |
 | Climate change: The good (rows + harvest calendar; `window.MODE = "good"`) | `cards/climate_good.html` | `cards/climate_good_wide.html` | 17.4 s (522 frames) |
 | Climate change: The bad (rows, April 2024 frost −⅔ (Destatis), 3 bottles; `window.MODE = "bad"`; cues in climate.js) | `cards/climate_bad.html` | `cards/climate_bad_wide.html` | 21.4 s (642 frames) |
